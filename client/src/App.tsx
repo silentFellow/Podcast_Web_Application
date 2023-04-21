@@ -1,9 +1,10 @@
 import React from "react"
+import { Signup } from "./Components/Signup"
 
 function App() {
   return (
     <div>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima officia maxime voluptates quo iure minus voluptate eum reiciendis, consectetur nihil deserunt possimus nemo, necessitatibus modi doloremque similique qui libero alias?
+      <Signup/>
     </div>
   )
 }
