@@ -1,9 +1,7 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import './comp.css'
 
 const Sidenav: FC = () => {
-
-    u
 
   return (
     <div className='components'>
