@@ -9,15 +9,19 @@ const router = express.Router()
 // creating an accout
 router.post('/signup', async (req, res) => {
   const { uname, pass } = req.body
+  const { google } = req.body || false
+
+  const findUser = await users.findOne({userName: uname})
 
   try {
-    if(await users.findOne({userName: uname})) {
+    if(findUser && findUser.google != true) {
       res.status(201).send('User already exists')
     }
     else {
       await users.create({
         userName: uname, 
         password: pass,
+        google: google
       })
       res.status(200).send('Successfullly created')
     }

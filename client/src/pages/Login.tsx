@@ -1,13 +1,13 @@
 import { useState, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useCookies } from 'react-cookie'
+import { Cookies, useCookies } from 'react-cookie'
 import { Google, Apple } from '../assets'
 import { FaFacebookF } from 'react-icons/fa'
 import { user } from '../contexts/users'
 
 const Login = () => {
 
-  const { login } = user()
+  const { login, googleLogin } = user()
   const uname = useRef()
   const password = useRef()
   const [message, setMessage] = useState<string>('')
@@ -35,6 +35,23 @@ const Login = () => {
     }
   }
 
+  const google = async (): Promise<void> => {
+    try {
+      const res = await googleLogin()
+      if(res.status != 200) {
+        setMessage(res.data)
+      }
+      else {
+        setCookies('access_token', res.data.access_token)
+        console.log(Cookies.access_token)
+        navigate('/explore')
+      }
+    }
+    catch {
+      setMessage('something went wrong')
+    }
+  }
+
   return (
          <div className="signdiv">
       <h3 className="start">Resume your Podcast Journey</h3>
@@ -56,7 +73,7 @@ const Login = () => {
        </div>
 
        <div className="othercred">
-      <div className="circle"><img src={Google} height={'30px'} width={'30px'} alt="" /></div>
+      <div className="circle"><img src={Google} height={'30px'} width={'30px'} alt="" onClick={() => google()} /></div>
       <div className="circle"><img src={Apple} height={'28px'} width={'28px'} alt="" /></div>
       <div className="circle"><FaFacebookF height={'30px'} width={'30px'} color={'red'} /></div>
        </div>

@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const instance = axios.create({
-  baseURL: 'http://localhost:9999'
+  baseURL: 'https://podcast-web-application.onrender.com'
 })
 
 export default instance
