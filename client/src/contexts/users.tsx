@@ -52,18 +52,22 @@ const UsersProvider: FC<Props> = ({ children }) => {
     const res = await userApi.post('/register/signup', {
       uname: user.displayName, 
       pass: user.email, 
-      boolean: true
+      google: true
     })
 
+    console.log(res) 
     if(res.status != 200) {
       const res = await userApi.post('/register/login', {
         uname: user.displayName, 
-        pass: user.email
+        pass: user.email, 
+        google: true
       })
+      console.log(res)
   
       if(res.status == 200) {
         setCurrentUser(res.data)
       }
+      console.log(currentUser)
     }
   }
 

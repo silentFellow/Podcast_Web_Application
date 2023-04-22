@@ -14,7 +14,7 @@ router.post('/signup', async (req, res) => {
   const findUser = await users.findOne({userName: uname})
 
   try {
-    if(findUser && google != true) {
+    if(findUser && google == true) {
       res.status(201).send('User already exists')
     }
     else {
