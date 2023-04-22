@@ -1,6 +1,6 @@
 import { FC } from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import { Signup, Login, Home } from "./pages"
+import { Home, Signup, Login, Explore, PrivateRouteLogin, PrivateRouteExplore } from "./pages"
 import UsersProvider from "./contexts/users"
 
 const App: FC = () => {
@@ -10,8 +10,13 @@ const App: FC = () => {
       <UsersProvider>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+          <Route element={<PrivateRouteLogin />} >
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+          </Route>
+          <Route element={<PrivateRouteExplore />} >
+            <Route path="/explore" element={<Explore />} />
+          </Route>
         </Routes>
       </UsersProvider>
     </Router>

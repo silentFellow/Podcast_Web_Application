@@ -1,6 +1,7 @@
 import { FC, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Google, Apple } from '../assets/'
+import { FaFacebookF } from 'react-icons/fa'
 import { user } from '../contexts/users'
 
 const Signup: FC = () => {
@@ -63,7 +64,7 @@ const Signup: FC = () => {
      <div className="othercred">
     <div className="circle"><img src={Google} height={'30px'} width={'30px'} alt="" /></div>
     <div className="circle"><img src={Apple} height={'28px'} width={'28px'} alt="" /></div>
-    <div className="circle"><img src="" alt="" /></div>
+    <div className="circle"><FaFacebookF height={'30px'} width={'30px'} color={'red'} /></div>
      </div>
   </div>
   )

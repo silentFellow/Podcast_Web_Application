@@ -1,4 +1,5 @@
-import { FC, createContext, useContext } from 'react'
+import { FC, useState, createContext, useContext } from 'react'
+import { useCookies } from 'react-cookie'
 import userApi from '../api/register'
 
 export const userContext = createContext<any>(null)
@@ -9,6 +10,9 @@ interface Props {
 }
 
 const UsersProvider: FC<Props> = ({ children }) => {
+
+  const [currentUser, setCurrentUser] = useState<string>()
+  const [_, setCookies] = useCookies(['access_token'])
 
   const signup = async (name: string, pass: string): Promise<any> => {
     const res = await userApi.post('/register/signup', {
@@ -25,12 +29,22 @@ const UsersProvider: FC<Props> = ({ children }) => {
       pass: pass
     })
 
+    if(res.status == 200) {
+      setCurrentUser(res.data)
+    }
+
     return res
+  }
+
+  const signout = () => {
+    setCookies('access_token', '')
   }
 
   const value = {
     signup, 
-    login
+    login, 
+    currentUser, 
+    signout
   }
 
   return (

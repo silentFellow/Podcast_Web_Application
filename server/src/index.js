@@ -3,6 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import { userRouter } from './routers/users.js'
+import { PodcastRouter } from './routers/podcast.js'
 
 // app init
 const app = express()
@@ -18,6 +19,7 @@ mongoose.connection.once('open', () => console.log('yo database is connectted su
 
 // app useage
 app.use('/register', userRouter)
+app.use('/podcast', PodcastRouter)
 
 // app listening
 const PORT = 9999
