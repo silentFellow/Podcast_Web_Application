@@ -34,13 +34,14 @@ router.post('/signup', async (req, res) => {
 // login 
 router.post('/login', async (req, res) => {
   const { uname, pass } = req.body
+  const { google } = req.body || false
 
   try {
     if(await users.findOne({ userName: uname })) {
       const currentUser = await users.findOne({ userName: uname })
       const originalpassword = currentUser.password
 
-      if(pass == originalpassword) {
+      if(pass == originalpassword && google == currentUser.google) {
         const access_token = jwt.sign({ user_id: currentUser._id }, 'secret')
         res.status(200).send({
           token: access_token, 
