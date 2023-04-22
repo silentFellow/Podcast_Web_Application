@@ -49,25 +49,29 @@ const UsersProvider: FC<Props> = ({ children }) => {
 
   const googleLogin = async (): Promise<any> => {
     signInWithPopup(auth, googleAuth)
-    const res = await userApi.post('/register/signup', {
+
+    const res = await userApi.post('/register/login', {
       uname: user.displayName, 
       pass: user.email, 
       google: true
     })
 
+    if(res.status == 200) {
+      setCurrentUser(res.data)
+      console.log(currentUser)
+    }
+
     console.log(res) 
     if(res.status != 200) {
-      const res = await userApi.post('/register/login', {
+      const res = await userApi.post('/register/signup', {
         uname: user.displayName, 
         pass: user.email, 
         google: true
       })
-      console.log(res)
-  
       if(res.status == 200) {
         setCurrentUser(res.data)
+        console.log(currentUser)
       }
-      console.log(currentUser)
     }
     return res
   }
