@@ -8,8 +8,7 @@ const router = express.Router()
 
 // creating an accout
 router.post('/signup', async (req, res) => {
-  const { uname, pass } = req.body
-  const { google } = req.body || false
+  const { uname, pass, google } = req.body
 
   const findUser = await users.findOne({userName: uname})
 
@@ -33,8 +32,7 @@ router.post('/signup', async (req, res) => {
 
 // login 
 router.post('/login', async (req, res) => {
-  const { uname, pass } = req.body
-  const { google } = req.body || false
+  const { uname, pass, google } = req.body
 
   try {
     if(await users.findOne({ userName: uname })) {

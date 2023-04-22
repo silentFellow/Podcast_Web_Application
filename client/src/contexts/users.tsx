@@ -69,6 +69,7 @@ const UsersProvider: FC<Props> = ({ children }) => {
       }
       console.log(currentUser)
     }
+    return res
   }
 
   const signout = () => {
