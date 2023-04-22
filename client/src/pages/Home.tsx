@@ -1,16 +1,18 @@
 import { useEffect } from 'react'
+import { Sidenav } from '../Components/SIdenav'
 import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
 
-  const navigate = useNavigate()
+  //const navigate = useNavigate()
 
-  useEffect(() => {
-    setTimeout(() => navigate('/login'), 1)
-  })
+  //useEffect(() => {
+  //  setTimeout(() => navigate('/login'), 3)})
 
   return (
-    <div>Loading...</div>
+    <div className='HomePage'>
+      <Sidenav/>
+    </div>
   )
 }
 
