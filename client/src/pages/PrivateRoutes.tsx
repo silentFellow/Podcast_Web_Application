@@ -1,21 +1,21 @@
 import { Outlet, Navigate } from "react-router-dom"
-import { user } from "../contexts/users"
+import { useCookies } from 'react-cookie'
 
 const PrivateRouteExplore = () => {
 
-  const { currentUser } = user()
+  const [cookies, _] = useCookies(['access_token'])
 
   return (
-    currentUser ? <Outlet /> : <Navigate to='/login' />
+    cookies.access_token ? <Outlet /> : <Navigate to='/login' />
   )
 }
 
 const PrivateRouteLogin = () => {
 
-  const { currentUser } = user()
+  const [cookies, _] = useCookies(['access_token'])
 
   return (
-    !currentUser ? <Outlet /> : <Navigate to='/login' />
+    !cookies.access_token ? <Outlet /> : <Navigate to='/explore' />
   )
 }
 
