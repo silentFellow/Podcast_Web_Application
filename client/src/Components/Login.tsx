@@ -1,27 +1,24 @@
 
 import {Link} from "react-router-dom"
 
-export const Signup = () =>{
+export const Login = () => {
 
-    return(
-        <div className="signdiv">
-            <h3 className="start">Start your Podcast Journey</h3>
-            <h2 className="create">Create new account</h2>
-            <h4 style={{color:'gray',marginTop:'10px'}}>Already a member? <Link to="/Login">Login </Link></h4>
+    return (
+               <div className="signdiv">
+            <h3 className="start">Resume your Podcast Journey</h3>
+            <h2 className="create">Signin in to your account</h2>
 
+            <h4 style={{color:'gray',marginTop:'10px'}}>Not a member? <a to="/Signup">Create account</a></h4>
 
             <div className="signupinput">
-                <div className="name">
-                    <div className="nameContainer"><input placeholder='First Name' type="text" className="first"/></div>
-                    <div className="nameContainer"><input type="text" placeholder="Last Name" className="last" /></div>
-                </div>
+
                 <div className="emailpass">
                     <div className="emailContainer"><input type="email" placeholder="Email" className="emailid"/></div>
                     <div className="emailContainer"><input type="password" placeholder="password" className="emailid"/></div>
                 </div>
             </div>
             <div>
-           <button className="createacc">Create account</button>
+           <button className="createacc">Sign in</button>
 
            <h3 style={{marginLeft:'135px',marginTop:'20px'}}>Other Credentials</h3>
            </div>
