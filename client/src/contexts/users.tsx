@@ -1,5 +1,4 @@
 import { FC, createContext, useContext } from 'react'
-import axios from 'axios'
 import userApi from '../api/register'
 
 export const userContext = createContext<any>(null)
@@ -21,7 +20,7 @@ const UsersProvider: FC<Props> = ({ children }) => {
   }
 
   const login = async (name: string, pass: string): Promise<any> => {
-    const res = await axios.post('/register/login', {
+    const res = await userApi.post('/register/login', {
       uname: name, 
       pass: pass
     })

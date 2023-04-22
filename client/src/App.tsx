@@ -1,14 +1,19 @@
 import { FC } from "react"
-import { Signup } from "./Components/Signup"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { Signup, Login, Home } from "./pages"
 import UsersProvider from "./contexts/users"
 
 const App: FC = () => {
   return (
-    <UsersProvider>
-      <div>
-        <Signup/>
-      </div>
-    </UsersProvider>
+    <Router>
+      <UsersProvider>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+        </Routes>
+      </UsersProvider>
+    </Router>
   )
 }
 
