@@ -41,7 +41,9 @@ router.post('/login', async (req, res) => {
         res.status(200).send({
           token: access_token, 
           uid: currentUser._id, 
-          userName: currentUser.userName
+          userName: currentUser.userName, 
+          myCollectio: currentUser.myCollection, 
+          favourites: currentUser.favourites
         })
       }
       else {

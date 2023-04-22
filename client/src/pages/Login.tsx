@@ -10,7 +10,6 @@ const Login = () => {
     const password = useRef()
     const [message, setMessage] = useState<string>('')
     const navigate = useNavigate()
-    console.log(message)
 
     const signin = async (): Promise<string | void> => {
         if(uname.current.value == '' || password.current.value == '') {
@@ -23,8 +22,7 @@ const Login = () => {
                     setMessage(res.data)
                 }
                 else {
-                    console.log(res.data)
-                    navigate('/signup')
+                    navigate('/explore')
                 }
             }
             catch {
