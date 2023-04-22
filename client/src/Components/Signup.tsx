@@ -1,34 +1,64 @@
+import { FC, useRef, useState } from 'react'
+import { Google, Apple } from '../assets/'
+import { user } from '../contexts/users'
 
-export const Signup = () =>{
+export const Signup: FC = () => {
 
-    return(
-        <div className="signdiv">
-            <h3 className="start">Start your Podcast Journey</h3>
-            <h2 className="create">Create new account</h2>
+    const firstName = useRef()
+    const lastName = useRef()
+    const password = useRef()
+    const confirmPassword = useRef()
+    const [message, setMessage]= useState<string>('')
+    console.log(message)
 
-            <h4 style={{color:'gray',marginTop:'10px'}}>Already a member? <a href="#">login</a></h4>
+    const { signup } = user()
 
-            <div className="signupinput">
-                <div className="name">
-                    <div className="nameContainer"><input placeholder='First Name' type="text" className="first"/></div>
-                    <div className="nameContainer"><input type="text" placeholder="Last Name" className="last" /></div>
-                </div>
-                <div className="emailpass">
-                    <div className="emailContainer"><input type="email" placeholder="Email" className="emailid"/></div>
-                    <div className="emailContainer"><input type="password" placeholder="password" className="emailid"/></div>
-                </div>
-            </div>
-            <div>
-           <button className="createacc">Create account</button>
+    const SignUp = async () => {
+        if(firstName.current.value == '') {
+            return setMessage("Enter a valid first name")
+        }
+        if(password.current.value != confirmPassword.current.value) {
+            return setMessage('Passwords do no match')
+        }
 
-           <h3 style={{marginLeft:'135px',marginTop:'20px'}}>Other Credentials</h3>
-           </div>
+        const name = firstName.current.value + lastName.current.value || ''
+        try {
+            const res = await signup(name, password.current.value)
+            setMessage(res)
+        }
+        catch {
+            setMessage('something went wrong')
+        }
+    }
 
-           <div className="othercred">
-            <div className="circle"><img src="./public/google.png" height={'30px'} width={'30px'} alt="" /></div>
-            <div className="circle"><img src="./public/apple.png" height={'28px'} width={'28px'} alt="" /></div>
-            <div className="circle"><img src="" alt="" /></div>
-           </div>
+  return(
+    <div className="signdiv">
+      <h3 className="start">Start your Podcast Journey</h3>
+      <h2 className="create">Create new account</h2>
+
+      <h4 style={{color:'gray',marginTop:'10px'}}>Already a member? <a href="#">login</a></h4>
+
+      <div className="signupinput">
+        <div className="name">
+          <div className="nameContainer"><input placeholder='First Name' type="text" className="first" ref={firstName} defaultValue='' /></div>
+          <div className="nameContainer"><input type="text" placeholder="Last Name" className="last" ref={lastName} defaultValue='' /></div>
         </div>
-    )
+        <div className="emailpass">
+          <div className="emailContainer"><input type="password" placeholder="password" className="emailid" ref={password} defaultValue='' /></div>
+          <div className="emailContainer"><input type="password" placeholder="confirm password" className="emailid" ref={confirmPassword} defaultValue='' /></div>
+        </div>
+      </div>
+      <div>
+       <button className="createacc" onClick={() => SignUp()}>Create account</button>
+
+       <h3 style={{marginLeft:'135px',marginTop:'20px'}}>Other Credentials</h3>
+       </div>
+
+       <div className="othercred">
+      <div className="circle"><img src={Google} height={'30px'} width={'30px'} alt="" /></div>
+      <div className="circle"><img src={Apple} height={'28px'} width={'28px'} alt="" /></div>
+      <div className="circle"><img src="" alt="" /></div>
+       </div>
+    </div>
+  )
 }
