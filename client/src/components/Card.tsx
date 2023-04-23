@@ -1,8 +1,7 @@
-
 import cardposter from "../assets/cardPoster.jpg"
 import profile from "../assets/profile.png"
 
-export const Card = () => {
+const Card = () => {
 
     return (
 
@@ -19,3 +18,5 @@ export const Card = () => {
         </div>
     )
 }
+
+export default Card

@@ -13,7 +13,7 @@ interface Props {
 
 const UsersProvider: FC<Props> = ({ children }) => {
 
-  const [currentUser, setCurrentUser] = useState<any>()
+  const [currentUser, setCurrentUser] = useState<any>({})
   const [users, setUsers] = useState<any>()
   const [_, setCookies] = useCookies(['access_token'])
 
@@ -43,7 +43,11 @@ const UsersProvider: FC<Props> = ({ children }) => {
     })
 
     if(res.status == 200) {
-      setCurrentUser(res.data)
+      const details = await userApi.get('/register/userDetails', {
+        userName: res.data.userName
+      })
+      setCurrentUser(details)
+      console.log(currentUser)
     }
 
     return res
@@ -65,13 +69,15 @@ const UsersProvider: FC<Props> = ({ children }) => {
       await signOut(auth)
     }
     setCookies('access_token', '')
+    localStorage.removeItem('name')
+    localStorage.removeItem('pass')
   }
 
   const value = {
     signup, 
     login, 
     googleLogin, 
-    users, 
+    users,  
     currentUser, 
     signout
   }
@@ -85,20 +91,10 @@ const UsersProvider: FC<Props> = ({ children }) => {
 
 export default UsersProvider
 
-/* const res = await login(users.displayName, users.email, true)
-      if(res.status == 200) {
-        setMessage(res.data)
-        setCookies('access_token', res.data.access_token)
-        navigate('/explore')
-      }
-      else {
-        const res = await signup(users.displayName, users.email, true)
-        if(res.status == 200) {
-          const res = await login(users.displayName, users.email, true)
-          setCookies('access_token', res.data.access_token)
-          navigate('/explore')
-        }
-        else {
-          setMessage(res.data)
-        }
-      } */
+/* 
+localStorage.setItem('userName', res.data.userName)
+          localStorage.setItem('uid', res.data.uid)
+          localStorage.setItem('collection', res.data.collection)
+          localStorage.setItem('favourites', res.data.favourites)
+          userSetup(localStorage.getItem('userName'), localStorage.getItem('uid'), localStorage.getItem('collection'), localStorage.getItem('favourites'))
+           */

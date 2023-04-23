@@ -7,6 +7,8 @@ import { user } from '../contexts/users'
 
 const Signup: FC = () => {
 
+  const [loading, setLoading] = useState<boolean>('')
+
   const firstName = useRef()
   const lastName = useRef()
   const password = useRef()
@@ -26,6 +28,7 @@ const Signup: FC = () => {
       return setMessage('Passwords do no match')
     }
 
+    setLoading(true)
     const name = firstName.current.value + lastName.current.value || ''
     try {
       const res = await signup(name, password.current.value)
@@ -39,6 +42,7 @@ const Signup: FC = () => {
     catch {
       setMessage('something went wrong')
     }
+    setLoading(false)
   }
 
   const google = async (): Promise<string | void> => {
@@ -97,7 +101,7 @@ const Signup: FC = () => {
     </div>
     </div>
     <div>
-     <button className="createacc" onClick={() => SignUp()}>Create account</button>
+     <button className="createacc" disabled={loading} onClick={() => SignUp()}>Create account</button>
 
      <h3 style={{marginLeft:'135px',marginTop:'20px'}}>Other Credentials</h3>
      </div>

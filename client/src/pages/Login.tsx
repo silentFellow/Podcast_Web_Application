@@ -7,7 +7,9 @@ import { user } from '../contexts/users'
 
 const Login = () => {
 
-  const { login, googleLogin, signup, users } = user()
+  const [loading, setLoading] = useState<boolean>(false)
+
+  const { login, googleLogin, signup, currentUser } = user()
   const uname = useRef()
   const password = useRef()
   const [message, setMessage] = useState<string>('')
@@ -16,10 +18,12 @@ const Login = () => {
 
   const signin = async (): Promise<string | void> => {
     setMessage('')
+    
     if(uname.current.value == '' || password.current.value == '') {
       return setMessage('Enter details')
     }
     else {
+      setLoading(true)
       try {
         const res = await login(uname.current.value, password.current.value)
         if(res.status != 200) {
@@ -34,25 +38,24 @@ const Login = () => {
         setMessage('something went wrong')
       }
     }
+    setLoading(false)
   }
 
   const google = async (): Promise<string | void> => {
     setMessage('')
+    setLoading(true)
     try {
       await googleLogin()
       const userName = localStorage.getItem('name')
       const password = localStorage.getItem('pass')
       const res = await login(userName, password, true)
-      console.log(res)
       if(res.status != 200) {
         const res = await signup(userName, password, true)
-        console.log(res)
         if(res.status != 200) {
           setMessage('something went wrong')
         }
         else {
           const res = await login(userName, password, true)
-          console.log(res)
           if(res.status == 200) {
             setCookies('access_token', res.data.access_token)
             navigate('/explore')
@@ -67,6 +70,7 @@ const Login = () => {
     catch {
       setMessage('something went wrong')
     }
+    setLoading(false)
   }
 
   return (
@@ -88,7 +92,7 @@ const Login = () => {
         </div>
       </div>
       <div>
-       <button className="createacc" onClick={() => signin()}>Sign in</button>
+       <button className="createacc" disabled={loading} onClick={() => signin()}>Sign in</button>
 
        <h3 style={{marginLeft:'135px',marginTop:'20px'}}>Other Credentials</h3>
        </div>
