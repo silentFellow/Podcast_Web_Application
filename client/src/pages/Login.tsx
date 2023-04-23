@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Cookies, useCookies } from 'react-cookie'
+import { useCookies } from 'react-cookie'
 import { Google, Apple } from '../assets'
 import { FaFacebookF } from 'react-icons/fa'
 import { user } from '../contexts/users'
@@ -9,7 +9,7 @@ const Login = () => {
 
   const [loading, setLoading] = useState<boolean>(false)
 
-  const { login, googleLogin, signup, currentUser } = user()
+  const { login, googleLogin, signup } = user()
   const uname = useRef()
   const password = useRef()
   const [message, setMessage] = useState<string>('')
@@ -19,23 +19,26 @@ const Login = () => {
   const signin = async (): Promise<string | void> => {
     setMessage('')
     
-    if(uname.current.value == '' || password.current.value == '') {
+    if(uname?.current?.value == '' || password?.current?.value == '') {
       return setMessage('Enter details')
     }
     else {
       setLoading(true)
       try {
-        const res = await login(uname.current.value, password.current.value)
+        const res = await login(uname?.current?.value, password?.current?.value)
         if(res.status != 200) {
+          console.log(res)
           setMessage(res.data)
         }
         else {
+          console.log(res)
           setCookies('access_token', res.data.access_token)
-          localStorage.setItem('name', uname.current.value)
+          localStorage.setItem('name', uname?.current?.value)
           navigate('/explore')
         }
       }
-      catch {
+      catch(err) {
+        console.log(err)
         setMessage('something went wrong')
       }
     }
@@ -59,18 +62,19 @@ const Login = () => {
           const res = await login(userName, password, true)
           if(res.status == 200) {
             setCookies('access_token', res.data.access_token)
-            localStorage.setItem('name', uname.current.value)
+            localStorage.setItem('name', uname?.current?.value)
             navigate('/explore')
           }
         }
       }
       else {
         setCookies('access_token', res.data.access_token)
-        localStorage.setItem('name', uname.current.value)
+        localStorage.setItem('name', uname?.current?.value)
         navigate('/explore')
       }
     }
-    catch {
+    catch(err) {
+      console.log(err)
       setMessage('something went wrong')
     }
     setLoading(false)

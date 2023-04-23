@@ -55,6 +55,13 @@ li{
     margin-top: 40px;
     margin-left: 50px;
     margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.Desc .head, .Desc .button {
+    width: 50%;
 }
 
 .play{

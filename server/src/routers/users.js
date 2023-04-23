@@ -71,5 +71,20 @@ router.get('/userDetails', async (req, res) => {
   res.send(details)
 })
 
+// poster update 
+router.post('/update', async (req, res) => {
+  const { uid, new } = req.body
+  try {
+    const collection = await users.findOne({ _id: uid }).my_collection
+
+    const currentUser = await users.findOneAndUpdate({ _id: uid }, {
+      my_collection: [new, ...collection]
+    })
+  }
+  catch(err) {
+    console.log(err)
+  }
+})
+
 // exports 
 export { router as userRouter }

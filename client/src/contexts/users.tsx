@@ -13,7 +13,7 @@ interface Props {
 
 const UsersProvider: FC<Props> = ({ children }) => {
 
-  const [users, setUsers] = useState<any>()
+  const [users, setUsers] = useState<any>([{}])
   const [_, setCookies] = useCookies(['access_token'])
 
   useEffect(() => {
@@ -40,24 +40,21 @@ const UsersProvider: FC<Props> = ({ children }) => {
       pass: pass, 
       google: verified
     })
-
     if(res.status == 200) {
-      const details = await userApi.get('/register/userDetails', {
-        userName: res.data.userName
-      })
-      setCurrentUser(details)
+      localStorage.setItem('userCred', JSON.stringify(res.data))
     }
-
     return res
   }
 
   const googleLogin = async () => {
     try {
       const data = await signInWithPopup(auth, googleAuth)
+      console.log(data)
       localStorage.setItem('name', data.user.displayName)
       localStorage.setItem('pass', data.user.email)
     }
-    catch {
+    catch(err) {
+      console.log(err)
       console.log('something went wrong')
     }
   }
@@ -77,16 +74,18 @@ const UsersProvider: FC<Props> = ({ children }) => {
       await signOut(auth)
     }
     setCookies('access_token', '')
-    localStorage.removeItem('name')
-    localStorage.removeItem('pass')
+    localStorage.clear()
   }
+
+  const getCurrentUser = () => JSON.parse(localStorage.getItem('userCred'))
 
   const value = {
     signup, 
     login, 
     googleLogin, 
+    users, 
     currentUser, 
-    users,  
+    getCurrentUser, 
     signout
   }
 

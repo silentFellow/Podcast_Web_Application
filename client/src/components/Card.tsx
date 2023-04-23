@@ -13,7 +13,7 @@ const Card = () => {
             <div className="CardDesc">
                 <h5>Author Name</h5>
                 <h4>PodCast Name</h4>
-                <h6>54K View   2 Weeks ago</h6>
+                <h6>2 Weeks ago</h6>
             </div>
         </div>
     )

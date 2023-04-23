@@ -21,17 +21,17 @@ const Signup: FC = () => {
 
   const SignUp = async () => {
     setMessage('')
-    if(firstName.current.value == '' || password.current.value == '') {
+    if(firstName?.current?.value == '' || password?.current?.value == '') {
       return setMessage("Enter a valid details")
     }
-    if(password.current.value != confirmPassword.current.value) {
+    if(password?.current?.value != confirmPassword?.current?.value) {
       return setMessage('Passwords do no match')
     }
 
     setLoading(true)
-    const name = firstName.current.value + lastName.current.value || ''
+    const name = firstName?.current?.value + lastName?.current?.value || ''
     try {
-      const res = await signup(name, password.current.value)
+      const res = await signup(name, password?.current?.value)
       if(res.status != 200) {
         setMessage(res)
       }
@@ -39,7 +39,8 @@ const Signup: FC = () => {
         navigate('/login')
       }
     }
-    catch {
+    catch(err) {
+      console.log(err)
       setMessage('something went wrong')
     }
     setLoading(false)
@@ -52,23 +53,22 @@ const Signup: FC = () => {
       const userName = localStorage.getItem('name')
       const password = localStorage.getItem('pass')
       const res = await login(userName, password, true)
-      console.log(res)
       if(res.status != 200) {
         const res = await signup(userName, password, true)
-        console.log(res)
         if(res.status != 200) {
           setMessage('something went wrong')
         }
         else {
           const res = await login(userName, password, true)
-          console.log(res)
           if(res.status == 200) {
+            console.log(res)
             setCookies('access_token', res.data.access_token)
             navigate('/explore')
           }
         }
       }
       else {
+        console.log(res)
         setCookies('access_token', res.data.access_token)
         navigate('/explore')
       }

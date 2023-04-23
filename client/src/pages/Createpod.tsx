@@ -10,7 +10,6 @@ import { uid } from 'uid'
 
 const Createpod: FC = () => {
 
-  const { currentUser } = user()
   const [ud, setUd] = useState('')
 
   const [poster, setPoster] = useState<any>()
@@ -21,16 +20,8 @@ const Createpod: FC = () => {
   const description = useRef()
   const [message, setMessage] = useState<string>('')
   const navigate = useNavigate()
-
-  useEffect(() => {
-    const userDetails = async () => {
-      const uname = localStorage.getItem('name')
-      const res = await currentUser(uname)
-      setUd(res.data)
-    }
-
-    userDetails()
-  }, [])
+  const { getCurrentUser } = user()
+  console.log(getCurrentUser())
 
   const publish = async () => {
     if(title?.current?.value == '' || description?.current?.value == '' || author?.current?.value == '' || file == '') {
@@ -43,7 +34,7 @@ const Createpod: FC = () => {
       const imageUrl = await getDownloadURL(imaageRef)
 
       const newId = uid(36)
-      const fileRef = ref(storage, `{newId}`)
+      const fileRef = ref(storage, `${newId}`)
       await uploadBytes(fileRef, file)
       const fileUrl = await getDownloadURL(fileRef)
 
@@ -52,7 +43,7 @@ const Createpod: FC = () => {
         description: description?.current?.value, 
         category: audio ? 'audio' : 'false', 
         author: author?.current?.value, 
-        authorId: ud.userName,
+        authorId: getCurrentUser().uid,
         posterURL: imageUrl, 
         fileURL: fileUrl
       })

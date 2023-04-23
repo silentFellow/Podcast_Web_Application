@@ -231,9 +231,17 @@ input:focus, textarea:focus {
   font-size: 35px;
 }
 
-.Discover{
+.Discover {
   display: flex;  
-  width: 62%;
+  justify-content: space-between;
+  align-items: center;
+  width: 63%;
+}
+
+.Discover h3 {
+  margin-left: 72%;
+  margin-top: 20px;
+  font-size: 27px;
 }
 
 .Discover h4{
@@ -242,7 +250,40 @@ input:focus, textarea:focus {
   color: #737488;
 }
 
-.Most{
+.Most {
   margin-top: 25px;
   margin-left: 25px;
+}
+
+.card_grid {
+  width: 63%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.category {
+  color: #0e72f6;
+  padding: 6px;
+  margin: 15px;
+  font-size: 18px;
+}
+
+.category:hover {
+  color: #0e72f6;
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.selected {
+  background-color: #121820;
+  border-radius: 18px;
+  padding: 6px;
+  margin: 15px;
+  font-size: 18px;
+  color: #f5f5f5;
+}
+
+.selected:hover {
+  opacity: 0.7;
+  cursor: pointer;
 }
