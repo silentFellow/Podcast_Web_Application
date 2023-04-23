@@ -1,8 +1,8 @@
 import { FC } from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import { Home, Signup, Login, Explore, PrivateRouteLogin, PrivateRouteExplore } from "./pages"
+import { Home, Signup, Login, PrivateRouteLogin, PrivateRouteExplore } from "./pages"
 import UsersProvider from "./contexts/users"
-import { Createpod } from "./Components/Createpod"
+import { Explore } from "./Components/Explore"
 
 const App: FC = () => {
   return (
@@ -22,7 +22,7 @@ const App: FC = () => {
       </UsersProvider>
   </Router>*/
 
-  <Createpod/>
+  <Explore/>
 
 
   )
