@@ -10,8 +10,6 @@ import { uid } from 'uid'
 
 const Createpod: FC = () => {
 
-  const [ud, setUd] = useState('')
-
   const [poster, setPoster] = useState<any>()
   const [file, setFile] = useState<any>()
   const [audio, setAudio] = useState<boolean>(true)
@@ -21,7 +19,6 @@ const Createpod: FC = () => {
   const [message, setMessage] = useState<string>('')
   const navigate = useNavigate()
   const { getCurrentUser } = user()
-  console.log(getCurrentUser())
 
   const publish = async () => {
     if(title?.current?.value == '' || description?.current?.value == '' || author?.current?.value == '' || file == '') {

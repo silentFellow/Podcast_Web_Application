@@ -287,3 +287,9 @@ input:focus, textarea:focus {
   opacity: 0.7;
   cursor: pointer;
 }
+
+.play:hover, .follow:hover {
+  cursor: pointer;
+  background-color: gold;
+  color: #121820;
+}
