@@ -42,6 +42,14 @@ const UsersProvider: FC<Props> = ({ children }) => {
       google: verified
     })
 
+    if(res.status == 200) {
+      const details = await userApi.get('/register/userDetails', {
+        userName: res.data.userName
+      })
+      setCurrentUser(details)
+      console.log(currentUser)
+    }
+
     return res
   }
 

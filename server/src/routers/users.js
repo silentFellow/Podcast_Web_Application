@@ -62,14 +62,14 @@ router.post('/login', async (req, res) => {
   }
 })
 
-/* // details 
+// details 
 router.get('/userDetails', async (req, res) => {
   const { userName } = req.query
 
   const details = await users.findOne({ userName: userName })
 
   res.send(details)
-}) */
+})
 
 // exports 
 export { router as userRouter }
