@@ -45,7 +45,7 @@ router.post('/login', async (req, res) => {
           token: access_token, 
           uid: currentUser._id, 
           userName: currentUser.userName, 
-          myCollection: currentUser.myCollection, 
+          my_collection: currentUser_collection, 
           favourites: currentUser.favourites
         })
       }
