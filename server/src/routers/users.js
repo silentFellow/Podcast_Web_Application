@@ -45,7 +45,7 @@ router.post('/login', async (req, res) => {
           token: access_token, 
           uid: currentUser._id, 
           userName: currentUser.userName, 
-          myCollectio: currentUser.myCollection, 
+          myCollection: currentUser.myCollection, 
           favourites: currentUser.favourites
         })
       }
@@ -60,6 +60,15 @@ router.post('/login', async (req, res) => {
   catch {
     console.log('Something went wrong')
   }
+})
+
+// details 
+router.get('/userDetails', async (req, res) => {
+  const { userName } = req.query
+
+  const details = await users.findOne({ userName: userName })
+
+  res.send(details)
 })
 
 // exports 

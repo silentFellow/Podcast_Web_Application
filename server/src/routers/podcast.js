@@ -7,7 +7,7 @@ const router = express.Router()
 
 // router func
 router.post('/post', async (req, res) => {
-  const { title, description, category, author, posterURL, fileURL } = req.body
+  const { title, description, category, author, authorId, posterURL, fileURL } = req.body
 
   try {
     if(await podcast.findOne({ fileURL })) {
@@ -19,6 +19,7 @@ router.post('/post', async (req, res) => {
         description, 
         category, 
         author, 
+        authorId, 
         posterURL, 
         fileURL
       })
@@ -48,7 +49,7 @@ router.get('/get', async (req, res) => {
 })
 
 router.post('/update', async (req, res) => {
-  const { id, author, title, posterURL, fileURL } = req.body
+  const { id, author, authorId, title, posterURL, fileURL } = req.body
 
   try {
     await podcast.findOneAndUpdate({ _id: id }, {
@@ -56,6 +57,7 @@ router.post('/update', async (req, res) => {
       description, 
       category, 
       author, 
+      authorId, 
       posterURL, 
       fileURL
     })

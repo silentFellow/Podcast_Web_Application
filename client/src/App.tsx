@@ -1,13 +1,12 @@
 import { FC } from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import { Home, Signup, Login, Explore, PrivateRouteLogin, PrivateRouteExplore } from "./pages"
+import { Home, Signup, Login, Explore, PrivateRouteLogin, PrivateRouteExplore, Createpod } from "./pages"
 import UsersProvider from "./contexts/users"
-import { Createpod } from "./Components/Createpod"
 
 const App: FC = () => {
   return (
   
-    /*<Router>
+    <Router>
       <UsersProvider>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -17,14 +16,12 @@ const App: FC = () => {
           </Route>
           <Route element={<PrivateRouteExplore />} >
             <Route path="/explore" element={<Explore />} />
+            <Route path="/create" element={<Createpod />} />
           </Route>
         </Routes>
       </UsersProvider>
-  </Router>*/
-
-  <Createpod/>
-
-
+    </Router>
+  
   )
 }
 
