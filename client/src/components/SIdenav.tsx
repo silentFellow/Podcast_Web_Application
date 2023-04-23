@@ -5,13 +5,14 @@ const Sidenav: FC = () => {
 
   return (
     <div className='components'>
-      <h3>Silent Podcast</h3>
-
-      <ul>
-        <li>Home</li>
-        <li>My collection</li>
-        <li>Favourites</li>
-      </ul>
+      <div className='Sidenav'>
+        <ul>
+          <li> <a href="">Explore</a> </li>
+          <li><a href="">Trending</a></li>
+          <li><a href="">Favourites</a></li>
+        </ul>
+      </div>
+     
     </div>
   )
 }

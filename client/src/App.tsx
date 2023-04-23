@@ -7,7 +7,7 @@ import { Explore } from "./Components/Explore"
 const App: FC = () => {
   return (
   
-    /*<Router>
+    /* <Router>
       <UsersProvider>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -20,9 +20,10 @@ const App: FC = () => {
           </Route>
         </Routes>
       </UsersProvider>
-  </Router>*/
+  </Router> */
 
   <Explore/>
+
 
 
   )

@@ -1,12 +1,43 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
 
+
+li{
+    list-style-type: none;
+}
+
+
 .components {
     left: 0;
-    background-color: #33313E;
+    position: fixed;
+    background-color: #1b182b;
     width: 20rem;
     height: 100%;
+    margin-top: 5px ;
     position: fixed;
-    border: 1px solid white;
+}
+
+.Sidenav{
+    margin-top: 50px;
+    margin-left: 30px;
+}
+
+.Sidenav li a{
+    display: block;
+    margin-top: 25px;
+    margin-right: 15px;
+    font-size: 20px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont;
+    text-decoration: none;
+    color: #9dbff3;
+}
+
+
+.Sidenav li a:hover{
+    background-color:   #000000;
+    color: rgb(255, 255, 255);
+    border-radius: 10px;
+    padding: 10px 30px;
+    transition: .5s;
 }
 
 .Cardmax{
@@ -32,12 +63,13 @@
     color: white;
     margin-right: 15px;
     margin-top: 15px;
+    border: none;
 }
 
 .follow{
     padding: 10px 30px;
     background-color: white;
-    border-color: black;
+    border-color:none;
     color: black;
     font-weight:bolder;
     box-sizing: border-box;
@@ -91,4 +123,65 @@
     border-radius: 180px;
     width: 50px;
     height: 50px;
+}
+
+.topnav{
+    position: fixed;
+    display: flex;
+    width: 100%;
+    top: 0;
+    height: 3.8rem;
+    background-color: #1b182b;
+    margin-bottom: 15px;
+    margin-top: 0px;
+}
+
+.logo{
+    display: flex;
+    font-size: 38px;
+    align-items: center;
+    justify-content: center;
+    margin-left: 35px;
+    }
+
+.Searchbar{
+    background-color: #2f3141;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 290px;
+    height: 44px;
+    margin-top: 10px;
+    padding: 10px 30px;
+    border-radius: 10px;
+}
+
+.searchinput{
+    display: block;
+    position: relative;
+    width: 100%;
+    padding: 10px 30px;
+    font-size: 16px;
+    object-fit: contain;
+    background-color: #2f3141;
+    color: white;
+    border: none;
+    margin-left: 0px;
+    border-radius: 10px;
+}
+
+.signout{
+    position: fixed;
+    margin-top: 10px;
+    align-items: center;
+    background-color: white;
+    border: none;
+    color: black;
+    right: 50px;
+    padding: 10px 20px;    
+    transition: .3s;
+}
+
+.signout:hover{
+    transform: scale(1.1);
 }
