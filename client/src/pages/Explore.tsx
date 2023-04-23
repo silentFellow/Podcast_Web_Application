@@ -1,6 +1,13 @@
 import { FC, useEffect } from 'react'
 import { user } from '../contexts/users'
+<<<<<<< HEAD:client/src/components/Explore.tsx
+import Sidenav from './SIdenav'
+import { Cardmax } from './Cardmax'
+import { Card } from './Card'
+import { Topnav } from './Topnav'
+=======
 import { Sidenav, Cardmax, Card } from '../components'
+>>>>>>> 42f47b8dff82fcdf8c03601055122143a8037aa2:client/src/pages/Explore.tsx
 
 <link href="https://fonts.googleapis.com/css?family=Bungee+Inline" rel="stylesheet"></link>
 
@@ -17,7 +24,8 @@ const Explore: FC = () =>{
 
   return (
     <div style={{top:0,marginTop:0}}>
-      <Sidenav />
+      <Topnav/>
+      <Sidenav/>
       <div className='ExplorePage'>
       <button onClick={() => signOut()}>SIGN OUT</button>
 
