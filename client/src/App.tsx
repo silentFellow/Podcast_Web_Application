@@ -1,7 +1,8 @@
 import { FC } from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import { Home, Signup, Login, Explore, PrivateRouteLogin, PrivateRouteExplore, Createpod } from "./pages"
+import { Home, Signup, Login, PrivateRouteLogin, PrivateRouteExplore, Createpod } from "./pages"
 import UsersProvider from "./contexts/users"
+import Explore from "./components/Explore"
 
 const App: FC = () => {
   return (

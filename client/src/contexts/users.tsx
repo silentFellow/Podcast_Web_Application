@@ -80,8 +80,7 @@ const UsersProvider: FC<Props> = ({ children }) => {
     signup, 
     login, 
     googleLogin, 
-    users, 
-    userSetup, 
+    users,  
     currentUser, 
     signout
   }
