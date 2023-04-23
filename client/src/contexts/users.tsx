@@ -13,7 +13,6 @@ interface Props {
 
 const UsersProvider: FC<Props> = ({ children }) => {
 
-  const [currentUser, setCurrentUser] = useState<any>({})
   const [users, setUsers] = useState<any>()
   const [_, setCookies] = useCookies(['access_token'])
 
@@ -47,7 +46,6 @@ const UsersProvider: FC<Props> = ({ children }) => {
         userName: res.data.userName
       })
       setCurrentUser(details)
-      console.log(currentUser)
     }
 
     return res
@@ -64,6 +62,16 @@ const UsersProvider: FC<Props> = ({ children }) => {
     }
   }
 
+  const currentUser = async (uname: string) => {
+    const res = await userApi.get('/register/userDetails', {
+      params: {
+        userName: uname
+      }
+    })
+
+    return res
+  }
+
   const signout = async (): Promise<void> => {
     if(users?.emailVerified == true) {
       await signOut(auth)
@@ -77,8 +85,8 @@ const UsersProvider: FC<Props> = ({ children }) => {
     signup, 
     login, 
     googleLogin, 
-    users,  
     currentUser, 
+    users,  
     signout
   }
 
@@ -90,11 +98,3 @@ const UsersProvider: FC<Props> = ({ children }) => {
 }
 
 export default UsersProvider
-
-/* 
-localStorage.setItem('userName', res.data.userName)
-          localStorage.setItem('uid', res.data.uid)
-          localStorage.setItem('collection', res.data.collection)
-          localStorage.setItem('favourites', res.data.favourites)
-          userSetup(localStorage.getItem('userName'), localStorage.getItem('uid'), localStorage.getItem('collection'), localStorage.getItem('favourites'))
-           */

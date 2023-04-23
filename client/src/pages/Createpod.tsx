@@ -1,43 +1,72 @@
-import { FC, useState, useRef } from 'react'
+import { FC, useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import PodcastApi from '../api/register'
 import { Sidenav } from '../components'
 import { Add } from '../assets'
 import { user } from '../contexts/users'
+import { storage } from '../firebase'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
+import { uid } from 'uid'
 
 const Createpod: FC = () => {
 
   const { currentUser } = user()
+  const [ud, setUd] = useState('')
 
-  const [poster, setPoster] = useState<string>('')
-  const [file, setFile] = useState<string>('')
+  const [poster, setPoster] = useState<any>()
+  const [file, setFile] = useState<any>()
+  const [audio, setAudio] = useState<boolean>(true)
   const title = useRef()
   const author = useRef()
   const description = useRef()
-  const category = useRef()
   const [message, setMessage] = useState<string>('')
   const navigate = useNavigate()
 
+  useEffect(() => {
+    const userDetails = async () => {
+      const uname = localStorage.getItem('name')
+      const res = await currentUser(uname)
+      setUd(res.data)
+    }
+
+    userDetails()
+  }, [])
+
   const publish = async () => {
-    console.log(currentUser)
-    if(title.current.value == '' || description.current.value == '' || category.current.value == '' || author.current.value == '' || file == '') {
+    if(title?.current?.value == '' || description?.current?.value == '' || author?.current?.value == '' || file == '') {
       return setMessage('Enter Required Details')
     }
-    const res = await PodcastApi.post({
-      title: title.current.value, 
-      description: description.current.value, 
-      category: category.current.value, 
-      author: author.current.value, 
-      authorId: currentUser.uid,
-      posterURL: '', 
-      fileURL: ''
-    })
-    if(res.status != 200) {
-      setMessage(res.data)
+    try {
+      const uniqueId = uid(36)
+      const imaageRef = ref(storage, `${uniqueId}`)
+      await uploadBytes(imaageRef, poster)
+      const imageUrl = await getDownloadURL(imaageRef)
+
+      const newId = uid(36)
+      const fileRef = ref(storage, `{newId}`)
+      await uploadBytes(fileRef, file)
+      const fileUrl = await getDownloadURL(fileRef)
+
+      const res = await PodcastApi.post('/podcast/post', {
+        title: title?.current?.value, 
+        description: description?.current?.value, 
+        category: audio ? 'audio' : 'false', 
+        author: author?.current?.value, 
+        authorId: ud.userName,
+        posterURL: imageUrl, 
+        fileURL: fileUrl
+      })
+      if(res.status != 200) {
+        setMessage(res.data)
+      }
+      else {
+        setMessage(res.data)
+        navigate('/explore')
+      }
     }
-    else {
-      setMessage(res.data)
-      navigate('/explore')
+    catch(err) {
+      console.log(err)
+      setMessage('something went wrong')
     }
   }
 
@@ -60,26 +89,30 @@ const Createpod: FC = () => {
 
           <div className="author">
             <h4>PodCast Name</h4>
-            <div className="emailContainer"><input type="text" placeholder="PodCastName" className="emailid" defaultValue='' /></div>
+            <div className="emailContainer"><input type="text" placeholder="PodCastName" className="emailid" ref={title} defaultValue='' /></div>
           </div>
           <div className="author">
             <h4>Author Name</h4>
-            <div className="emailContainer"><input type="text" placeholder="AuthorName" className="emailid" defaultValue='' /></div>
+            <div className="emailContainer"><input type="text" placeholder="AuthorName" className="emailid" ref={author} defaultValue='' /></div>
           </div>
           <div className="author">
             <h4>PodCast Description</h4>
-            <div className="emailContainer"><textarea type="text" placeholder="Description" className="emailid" defaultValue='' rows={6} cols={12} /></div>
+            <div className="emailContainer"><textarea type="text" placeholder="Description" className="emailid" defaultValue='' ref={description} rows={6} cols={12} /></div>
           </div>
           <div className="author">
             <h4>Category</h4>
 
             <div style={{ display: "flex", marginTop: "10px" }}>
               <label className="form-control">
-                <input type="radio" name="radio" value='video' />
+                <input type="radio" name="radio" value='video' 
+                  onClick={() => setAudio(false)}
+                />
                 Video
               </label>
               <label className="form-control">
-                <input type="radio" name="radio" value='audio' checked />
+                <input type="radio" name="radio" value='audio' checked={audio} 
+                  onClick={() => setAudio(true)}
+                />
                 Audio
               </label>
             </div>

@@ -1,12 +1,10 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { user } from '../contexts/users'
 import { Sidenav, Cardmax, Card } from '../components'
 
 <link href="https://fonts.googleapis.com/css?family=Bungee+Inline" rel="stylesheet"></link>
 
-const Explore: FC = () =>{
-
-  const { signout } = user()
+const Explore: FC = () =>{  
 
   const signOut = async (): Promise<void> => {
     try {

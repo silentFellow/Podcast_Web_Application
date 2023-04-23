@@ -31,6 +31,7 @@ const Login = () => {
         }
         else {
           setCookies('access_token', res.data.access_token)
+          localStorage.setItem('name', uname.current.value)
           navigate('/explore')
         }
       }
@@ -58,12 +59,14 @@ const Login = () => {
           const res = await login(userName, password, true)
           if(res.status == 200) {
             setCookies('access_token', res.data.access_token)
+            localStorage.setItem('name', uname.current.value)
             navigate('/explore')
           }
         }
       }
       else {
         setCookies('access_token', res.data.access_token)
+        localStorage.setItem('name', uname.current.value)
         navigate('/explore')
       }
     }
