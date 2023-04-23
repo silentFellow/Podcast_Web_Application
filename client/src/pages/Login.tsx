@@ -9,7 +9,7 @@ const Login = () => {
 
   const [loading, setLoading] = useState<boolean>(false)
 
-  const { login, googleLogin, signup, userSetup, currentUser } = user()
+  const { login, googleLogin, signup, currentUser } = user()
   const uname = useRef()
   const password = useRef()
   const [message, setMessage] = useState<string>('')

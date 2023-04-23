@@ -1,5 +1,4 @@
-
-export const Cardmax = () =>{
+const Cardmax = () =>{
 
     return (
 
@@ -14,3 +13,5 @@ export const Cardmax = () =>{
         </div>
     )
 }
+
+export default Cardmax

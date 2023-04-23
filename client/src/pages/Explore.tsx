@@ -1,12 +1,10 @@
 import { FC } from 'react'
 import { user } from '../contexts/users'
-import Sidenav from './Sidenav'
-import { Cardmax } from './Cardmax'
-import { Card } from './Card'
+import { Sidenav, Cardmax, Card } from '../components'
 
 <link href="https://fonts.googleapis.com/css?family=Bungee+Inline" rel="stylesheet"></link>
 
-export const Explore: FC = () =>{
+const Explore: FC = () =>{
 
   const { signout } = user()
 
@@ -21,7 +19,7 @@ export const Explore: FC = () =>{
 
   return (
     <div style={{top:0,marginTop:0}}>
-      <Sidenav/>
+      <Sidenav />
       <div className='ExplorePage'>
       <button onClick={() => signOut()}>SIGN OUT</button>
 

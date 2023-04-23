@@ -6,7 +6,7 @@ import users from '../schemas/users.js'
 // router set-up
 const router = express.Router()
 
-// creating an accout
+// creating an account
 router.post('/signup', async (req, res) => {
   const { uname, pass, google } = req.body
 
@@ -45,7 +45,7 @@ router.post('/login', async (req, res) => {
           token: access_token, 
           uid: currentUser._id, 
           userName: currentUser.userName, 
-          my_collection: currentUser_collection, 
+          my_collection: currentUser.my_collection, 
           favourites: currentUser.favourites
         })
       }
@@ -62,14 +62,14 @@ router.post('/login', async (req, res) => {
   }
 })
 
-// details 
+/* // details 
 router.get('/userDetails', async (req, res) => {
   const { userName } = req.query
 
   const details = await users.findOne({ userName: userName })
 
   res.send(details)
-})
+}) */
 
 // exports 
 export { router as userRouter }

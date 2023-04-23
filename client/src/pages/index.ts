@@ -9,7 +9,7 @@ export {
   Signup, 
   Login, 
   Home, 
-  /* Explore,  */
+  Explore, 
   PrivateRouteExplore, 
   PrivateRouteLogin, 
   Createpod
