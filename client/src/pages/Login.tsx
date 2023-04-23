@@ -7,7 +7,7 @@ import { user } from '../contexts/users'
 
 const Login = () => {
 
-  const { login, googleLogin } = user()
+  const { login, googleLogin, signup, users } = user()
   const uname = useRef()
   const password = useRef()
   const [message, setMessage] = useState<string>('')
@@ -15,6 +15,7 @@ const Login = () => {
   const navigate = useNavigate()
 
   const signin = async (): Promise<string | void> => {
+    setMessage('')
     if(uname.current.value == '' || password.current.value == '') {
       return setMessage('Enter details')
     }
@@ -35,15 +36,31 @@ const Login = () => {
     }
   }
 
-  const google = async (): Promise<void> => {
+  const google = async (): Promise<string | void> => {
+    setMessage('')
     try {
-      const res = await googleLogin()
+      await googleLogin()
+      const userName = localStorage.getItem('name')
+      const password = localStorage.getItem('pass')
+      const res = await login(userName, password, true)
+      console.log(res)
       if(res.status != 200) {
-        setMessage(res.data)
+        const res = await signup(userName, password, true)
+        console.log(res)
+        if(res.status != 200) {
+          setMessage('something went wrong')
+        }
+        else {
+          const res = await login(userName, password, true)
+          console.log(res)
+          if(res.status == 200) {
+            setCookies('access_token', res.data.access_token)
+            navigate('/explore')
+          }
+        }
       }
       else {
         setCookies('access_token', res.data.access_token)
-        console.log(Cookies.access_token)
         navigate('/explore')
       }
     }
@@ -60,6 +77,10 @@ const Login = () => {
       <h4 style={{color:'gray',marginTop:'10px'}}>Not a member? <Link to='/Signup'>Create account</Link></h4>
 
       <div className="signupinput">
+
+      <div className={message == '' ? 'hidden' : "emailpass my p"}>
+        <div className="emailContainer center">{message}</div>
+      </div>
 
         <div className="emailpass">
           <div className="emailContainer"><input type="text" placeholder="User Name" className="emailid" ref={uname} defaultValue='' /></div>
