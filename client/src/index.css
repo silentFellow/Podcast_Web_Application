@@ -4,27 +4,11 @@
   box-sizing: border-box;
 }
 
-.center {
-  text-align: center;
-}
-
-.my {
-  margin-top: -45px;
-  margin-bottom: 12px;
-}
-
-.p {
-  padding: 1px;
-}
-
-.hidden {
-  display: none;
-}
-
 body{
   background-color: #0B0c11;
   color: white;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI';
+
 }
 
 button{
@@ -38,6 +22,8 @@ a{
   color: #3172AA;
   list-style-type: none;
 }
+
+
 
 .signdiv{
   margin-top: 8rem;
@@ -111,6 +97,7 @@ a{
 
 .emailid{
   width: 400px;
+
 }
 
 .createacc{
@@ -136,4 +123,84 @@ a{
   margin-left: 20px;
   width: 40px;
   height: 40px;
+}
+
+.CreatePodc{
+  margin-left: 20.5rem;
+
+}
+
+.CreatePodc h2{
+  margin-left: 30px;
+  margin-top: 30px;
+  font-size: 38px;
+}
+
+.Poster{
+
+  border: 1px solid white;
+  width: 250px;
+  height: 250px;
+  margin-top: 15px;
+  border-radius: 15px;
+}
+
+.UploadPost{
+  margin-left: 35px;
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
+.UploadPost h3{
+  font-size: 20px;
+}
+
+.Poster h4{
+  margin-top:10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.author h4{
+  margin-top: 15px;
+}
+
+input:focus{
+  outline:none;
+}
+
+
+
+.CreatePodc input{
+  padding: 10px;
+  background-color: #282A37;
+  color: white;
+  border: none;
+  margin-left: 10px;
+  border-radius: 10px;
+
+}
+
+.form-control {
+  font-family: system-ui, sans-serif;
+  font-size: 25px;
+  font-weight: bold;
+  line-height: 1.1;
+  display: grid;
+  grid-template-columns: 1em auto;
+  gap: 0.5em;
+}
+
+.publish{
+  display: flex;
+  margin-left: 80px;
+  margin-top: 20px;
+}
+
+.savebtn{
+  padding: 13px 30px;
+  text-align: center;
+  margin-right: 35px;
+
 }

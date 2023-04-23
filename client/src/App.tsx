@@ -2,11 +2,12 @@ import { FC } from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { Home, Signup, Login, Explore, PrivateRouteLogin, PrivateRouteExplore } from "./pages"
 import UsersProvider from "./contexts/users"
+import { Createpod } from "./Components/Createpod"
 
 const App: FC = () => {
   return (
   
-    <Router>
+    /*<Router>
       <UsersProvider>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -19,7 +20,9 @@ const App: FC = () => {
           </Route>
         </Routes>
       </UsersProvider>
-    </Router>
+  </Router>*/
+
+  <Createpod/>
 
 
   )
