@@ -50,14 +50,13 @@ const Createpod: FC = () => {
       if(res.status != 200) {
         setMessage(res.data)
       }
-    }
-    catch(err) {
-      console.log(err)
-      setMessage('something went wrong')
-    }
+      else {
+        setMessage(res.data)
+        navigate('/explore')
+      }
 
-    try {
-      const res = await PodcastApi.post('/register/update', {
+/*  for collection
+      const newRes = await PodcastApi.post('/register/update', {
         uid: getCurrentUser().uid, 
         newCollection: {
           title: title?.current?.value, 
@@ -69,18 +68,19 @@ const Createpod: FC = () => {
           fileURL: fileUrl
         }
       })
-      if(res.status != 200) {
-        setMessage(res.data)
+      if(newRes.status != 200) {
+        setMessage(newRes.data)
       }
       else {
-        setMessage(res.data)
+        setMessage(newRes.data)
         navigate('/explore')
-      }
+      } */
     }
     catch(err) {
       console.log(err)
       setMessage('something went wrong')
     }
+    
     setLoading(false)
   }
 
