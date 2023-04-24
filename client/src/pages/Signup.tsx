@@ -31,6 +31,7 @@ const Signup: FC = () => {
     setLoading(true)
     const name = firstName?.current?.value + lastName?.current?.value || ''
     try {
+      setMessage('Please Wait')
       const res = await signup(name, password?.current?.value)
       if(res.status != 200) {
         setMessage(res)

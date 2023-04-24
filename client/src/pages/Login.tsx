@@ -25,6 +25,7 @@ const Login = () => {
     else {
       setLoading(true)
       try {
+        setMessage('Please Wait')
         const res = await login(uname?.current?.value, password?.current?.value)
         if(res.status != 200) {
           console.log(res)

@@ -18,7 +18,7 @@ const Explore: FC = () =>{
         key: '', 
         value: ''
       })
-      setCollection(res.data)
+      setCollection((res.data).reverse())
       console.log(res)
     }
 
