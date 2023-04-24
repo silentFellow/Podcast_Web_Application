@@ -50,6 +50,28 @@ const Createpod: FC = () => {
       if(res.status != 200) {
         setMessage(res.data)
       }
+    }
+    catch(err) {
+      console.log(err)
+      setMessage('something went wrong')
+    }
+
+    try {
+      const res = await PodcastApi.post('/register/update', {
+        uid: getCurrentUser().uid, 
+        newCollection: {
+          title: title?.current?.value, 
+          description: description?.current?.value, 
+          category: audio ? 'audio' : 'false', 
+          author: author?.current?.value, 
+          authorId: getCurrentUser().uid,
+          posterURL: imageUrl, 
+          fileURL: fileUrl
+        }
+      })
+      if(res.status != 200) {
+        setMessage(res.data)
+      }
       else {
         setMessage(res.data)
         navigate('/explore')

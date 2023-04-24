@@ -73,13 +73,15 @@ router.get('/userDetails', async (req, res) => {
 
 // poster update 
 router.post('/update', async (req, res) => {
-  const { uid, new } = req.body
+  const { uid, newCollection } = req.body
   try {
     const collection = await users.findOne({ _id: uid }).my_collection
 
     const currentUser = await users.findOneAndUpdate({ _id: uid }, {
       my_collection: [new, ...collection]
     })
+
+    res.status(200).send('Uploaded Successfully')
   }
   catch(err) {
     console.log(err)
