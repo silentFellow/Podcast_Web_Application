@@ -297,7 +297,7 @@ input:focus, textarea:focus {
 .player_wrapper {
   min-height: 90%;
   width: 450px;
-  background: linear-gradient(90deg, hsla(64, 73%, 16%, 1) 0%, hsla(65, 59%, 31%, 1) 100%);
+  background: #1b182b;
   position: absolute;
   right: 0;
   top: 63px;

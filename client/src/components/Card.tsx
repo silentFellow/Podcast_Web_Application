@@ -3,6 +3,10 @@ import cardposter from "../assets/cardPoster.jpg"
 import profile from "../assets/profile.png"
 import Play from '../assets/playImg.png'
 import { category } from '../constants/category'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import like from "../assets/like.png"
+
+
 
 interface Props {
     poster: string, 
@@ -26,6 +30,8 @@ const Card: FC<Props> = ({ poster, author, title, date, file, setUrl, setAudio }
                         setAudio(category)
                     }}
                 />
+                <img src={like} alt="" className='like' height={25} width={30}/>
+
             </div>
             <img src={cardposter == '' ? profile : poster}  className="cardposter" loading='lazy'  />
             <div className="CardDesc">
