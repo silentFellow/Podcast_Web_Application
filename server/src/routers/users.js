@@ -75,10 +75,10 @@ router.get('/userDetails', async (req, res) => {
 router.post('/update', async (req, res) => {
   const { uid, newCollection } = req.body
   try {
-    const collection = await users.findOne({ _id: uid }).my_collection
+    const oldCollection = await users.findOne({ _id: uid }).my_collection
 
     const currentUser = await users.findOneAndUpdate({ _id: uid }, {
-      my_collection: [new, ...collection]
+      my_collection: [newCollection, ...oldCollection]
     })
 
     res.status(200).send('Uploaded Successfully')
