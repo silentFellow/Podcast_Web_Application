@@ -1,6 +1,11 @@
+import { FC } from 'react'
 import { user } from "../contexts/users"
 
-const Topnav = () => {
+interface Props {
+  setSearch: Dispatch<string>,
+}
+
+const Topnav: FC<Props> = ({ setSearch }) => {
 
     const { signout } = user()
 
@@ -10,7 +15,7 @@ const Topnav = () => {
          <h3 className="logo">Silent Podcast</h3>
       </div>
       <div className="Searchbar">
-        <input className="searchinput" type="text" placeholder="Search"/>
+        <input className="searchinput" type="text" placeholder="Search" onChange={(e) => setSearch(e.target.value)} />
       </div>
 
       <h4>

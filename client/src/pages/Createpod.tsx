@@ -55,7 +55,6 @@ const Createpod: FC = () => {
         navigate('/explore')
       }
 
-/*  for collection
       const newRes = await PodcastApi.post('/register/update', {
         uid: getCurrentUser().uid, 
         newCollection: {
@@ -63,7 +62,7 @@ const Createpod: FC = () => {
           description: description?.current?.value, 
           category: audio ? 'audio' : 'false', 
           author: author?.current?.value, 
-          authorId: getCurrentUser().uid,
+          authorId: getCurrentUser().uid, 
           posterURL: imageUrl, 
           fileURL: fileUrl
         }
@@ -74,7 +73,7 @@ const Createpod: FC = () => {
       else {
         setMessage(newRes.data)
         navigate('/explore')
-      } */
+      }
     }
     catch(err) {
       console.log(err)

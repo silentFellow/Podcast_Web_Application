@@ -27,7 +27,7 @@ const Card: FC<Props> = ({ poster, author, title, date, file, setUrl, setAudio }
                     }}
                 />
             </div>
-            <img src={cardposter == '' ? profile : poster}  className="cardposter"  />
+            <img src={cardposter == '' ? profile : poster}  className="cardposter" loading='lazy'  />
             <div className="CardDesc">
                 <h5>{author}</h5>
                 <h4>{title}</h4>

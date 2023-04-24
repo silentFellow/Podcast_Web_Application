@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from 'react'
+import { FC, useState, useEffect, useMemo } from 'react'
 import { Sidenav, Cardmax, Card, Topnav, Player } from '../components'
 import { category } from '../constants/category'
 import PodcastApi from '../api/register'
@@ -7,7 +7,9 @@ import PodcastApi from '../api/register'
 
 const Explore: FC = () =>{
   const [collection, setCollection] = useState<any>([{}])
+  const [renCollection, setRenCollection] = useState<any>([{}])
   const [activeCategory, setActiveCategory] = useState<string>(category[0].key)
+  const [search, setSearch] = useState<string>('')
 
   const [url, setUrl] = useState<string>('')
   const [audio, setAudio] = useState<boolean>(false)
@@ -18,22 +20,25 @@ const Explore: FC = () =>{
         key: '', 
         value: ''
       })
-      setCollection((res.data).reverse())
-      console.log(res)
+      const data = (res.data).reverse()
+      if(search == '') {
+        setCollection(data)
+      }
+      else {
+        setCollection(data.filter(data => data.title.toLowerCase().includes(search.toLowerCase())))
+      }
     }
-
     pod()
-  }, [])
+  }, [search])
 
   return (
     <div style={{top:0,marginTop:0}}>
-      <Topnav />
+      <Topnav setSearch={setSearch} />
       <Sidenav active={activeCategory} setActive={setActiveCategory} btn={'Upload'} link={'/create'} />
       <div className='ExplorePage'>
 
       <div className='Discover'>
         <h3 style={{marginLeft:"10px"}}>{activeCategory}</h3>
-        <h4>more</h4>
       </div>
 
       {activeCategory == 'TRENDING' || activeCategory == 'AUDIO' || activeCategory == 'VIDEO' ? 
