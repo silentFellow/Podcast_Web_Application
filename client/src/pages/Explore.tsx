@@ -1,18 +1,21 @@
-import { FC, useState, useEffect, useMemo } from 'react'
+import { FC, useState, useEffect } from 'react'
 import { Sidenav, Cardmax, Card, Topnav, Player } from '../components'
+import { user } from '../contexts/users'
 import { category } from '../constants/category'
 import PodcastApi from '../api/register'
 
 <link href="https://fonts.googleapis.com/css?family=Bungee+Inline" rel="stylesheet"></link>
 
 const Explore: FC = () =>{
+  const [collect, setCollect] = useState<any>([{}])
+  const [fav, setFav] = useState<any>([{}])
   const [collection, setCollection] = useState<any>([{}])
-  const [renCollection, setRenCollection] = useState<any>([{}])
   const [activeCategory, setActiveCategory] = useState<string>(category[0].key)
   const [search, setSearch] = useState<string>('')
 
   const [url, setUrl] = useState<string>('')
   const [audio, setAudio] = useState<boolean>(false)
+  const { getCurrentUser, prof } = user()
 
   useEffect(() => {
     const pod = async () => {
@@ -27,6 +30,9 @@ const Explore: FC = () =>{
       else {
         setCollection(data.filter(data => data.title.toLowerCase().includes(search.toLowerCase())))
       }
+      const ress = await prof()
+      setCollect((ress.data.my_collection).reverse())
+      setFav((ress.data.favourites).reverse())
     }
     pod()
   }, [search])
@@ -41,8 +47,22 @@ const Explore: FC = () =>{
         <h3 style={{marginLeft:"10px"}}>{activeCategory}</h3>
       </div>
 
-      {activeCategory == 'TRENDING' || activeCategory == 'AUDIO' || activeCategory == 'VIDEO' ? 
+      {activeCategory != 'MY_COLLECTION' ? 
         <div className="card_grid">
+          {activeCategory == 'EXPLORE' && collection.map((clcn: any) => {
+            return (
+              <Card 
+                author={clcn.author} 
+                title={clcn.title} 
+                poster={clcn.posterURL} 
+                file={clcn.fileURL} 
+                date={clcn.createdAt?.slice(0, 10)} 
+                setUrl={setUrl}
+                setAudio={setAudio}
+              />
+            )
+          })}
+
           {activeCategory == 'TRENDING' && collection.map((clcn: any) => {
             return (
               <Card 
@@ -76,7 +96,7 @@ const Explore: FC = () =>{
           })}
 
           {activeCategory == 'VIDEO' && collection.filter((clcn) => {
-            if(clcn.category == 'false') {
+            if(clcn.category == 'video') {
               return clcn
             }
             }).map((cl) => {
@@ -92,9 +112,23 @@ const Explore: FC = () =>{
                 />
               )
             })}
+
+          {activeCategory == 'FAVOURITES' && fav.map((cl) => {
+              return (
+                <Card 
+                  author={cl.author} 
+                  title={cl.title} 
+                  poster={cl.posterURL} 
+                  file={cl.fileURL} 
+                  date={cl.createdAt.slice(0, 10)} 
+                  setUrl={setUrl}
+                  setAudio={setAudio}
+                />
+              )
+            })}
         </div> 
         :
-        activeCategory == 'EXPLORE' && collection.map((clcn) => {
+        activeCategory == 'MY_COLLECTION' && collect.map((clcn) => {
           return (
             <Cardmax 
               author={clcn.author}
@@ -102,6 +136,7 @@ const Explore: FC = () =>{
               file={clcn.fileURL} 
               setUrl={setUrl}
               setAudio={setAudio}
+              id={clcn._id}
             />
           )
         })

@@ -6,10 +6,11 @@ interface Props {
     title: string, 
     file: string, 
     setUrl: Dispatch<string>, 
-    setAudio: Dispatch<string>
+    setAudio: Dispatch<string>, 
+    id: string
 }
 
-const Cardmax: FC<Props> = ({ author, title, file, setUrl, setAudio }) =>{
+const Cardmax: FC<Props> = ({ author, title, file, setUrl, setAudio, id }) =>{
 
     return (
 
@@ -25,7 +26,7 @@ const Cardmax: FC<Props> = ({ author, title, file, setUrl, setAudio }) =>{
                             setUrl(file)
                         }}
                     >Play Now</button>
-                    <button className="follow">Follow</button>
+                    <button className="follow">Edit</button>
                 </div>
             </div>
             

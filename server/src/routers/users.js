@@ -1,5 +1,5 @@
 // imports
-import express from 'express'
+import express, { json } from 'express'
 import jwt from 'jsonwebtoken'
 import users from '../schemas/users.js'
 
@@ -73,19 +73,36 @@ router.get('/userDetails', async (req, res) => {
 
 // poster update 
 router.post('/update', async (req, res) => {
-  const { uid, newCollection } = req.body
+  const { uid, newCollection, category } = req.body
   try {
-    const oldCollection = await users.findById( uid ).my_collection
-
-    const currentUser = await users.findOneAndUpdate({ _id: uid }, {
-      my_collection: [newCollection, ...oldCollection]
-    })
+    if(category == 'mine') {
+      const currentUser = await users.findByIdAndUpdate(uid, {
+        $push: {
+          my_collection: newCollection
+        }
+      })
+    }
+    else if(category == 'fav') {
+      const currentUser = await users.findByIdAndUpdate(uid, {
+        $push: {
+          favourites: newCollection
+        }
+      })
+    }
 
     res.status(200).send('Uploaded Successfully')
   }
   catch(err) {
     console.log(err)
   }
+})
+
+// prof 
+router.get('/prof', async (req, res) => {
+  const { uid } = req.query
+
+  const data = await users.findById( uid )
+  res.status(200).send(data)
 })
 
 // exports 

@@ -80,6 +80,23 @@ const UsersProvider: FC<Props> = ({ children }) => {
 
   const getCurrentUser = () => JSON.parse(localStorage.getItem('userCred'))
 
+  const prof = async () => {
+    const id = localStorage.getItem('uid')
+
+    try {
+      const res = await userApi.get('/register/prof', {
+        params: {
+          uid: id
+        }
+      })
+
+      return res
+    }
+    catch(err) {
+      console.log(err)
+    }
+  }
+
   const value = {
     signup, 
     login, 
@@ -87,6 +104,7 @@ const UsersProvider: FC<Props> = ({ children }) => {
     users, 
     currentUser, 
     getCurrentUser, 
+    prof, 
     signout
   }
 

@@ -34,6 +34,7 @@ const Login = () => {
         else {
           console.log(res)
           setCookies('access_token', res.data.access_token)
+          localStorage.setItem('uid', res.data.uid)
           localStorage.setItem('name', uname?.current?.value)
           navigate('/explore')
         }
