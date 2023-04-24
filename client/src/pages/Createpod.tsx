@@ -12,7 +12,7 @@ const Createpod: FC = () => {
 
   const [poster, setPoster] = useState<any>()
   const [file, setFile] = useState<any>()
-  const [audio, setAudio] = useState<boolean>(true)
+  const [category, setCategory] = useState<string>('audio')
   const title = useRef()
   const author = useRef()
   const description = useRef()
@@ -41,7 +41,7 @@ const Createpod: FC = () => {
       const res = await PodcastApi.post('/podcast/post', {
         title: title?.current?.value, 
         description: description?.current?.value, 
-        category: audio ? 'audio' : 'false', 
+        category: category, 
         author: author?.current?.value, 
         authorId: getCurrentUser().uid,
         posterURL: imageUrl, 
@@ -60,12 +60,13 @@ const Createpod: FC = () => {
         newCollection: {
           title: title?.current?.value, 
           description: description?.current?.value, 
-          category: audio ? 'audio' : 'false', 
+          category: category, 
           author: author?.current?.value, 
           authorId: getCurrentUser().uid, 
           posterURL: imageUrl, 
           fileURL: fileUrl
-        }
+        }, 
+        category: 'mine'
       })
       if(newRes.status != 200) {
         setMessage(newRes.data)
@@ -95,8 +96,8 @@ const Createpod: FC = () => {
             <label htmlFor='posterInput'>
               <img src={Add} alt="" className='cover' />
             </label>
-            <input type='file' className='hidden' id='posterInput' onChange={(e) => {
-              setPoster(e.target.files[0])
+            <input type='file' className='hidden' id='posterInput' accept='image/*' onChange={(e) => {
+              setPoster(e.target.files[0]) 
             }} />
           </div>
 
@@ -118,13 +119,13 @@ const Createpod: FC = () => {
             <div style={{ display: "flex", marginTop: "10px" }}>
               <label className="form-control">
                 <input type="radio" name="radio" value='video' 
-                  onClick={() => setAudio(false)}
+                  onClick={(e) => setCategory(e.target.value)}
                 />
                 Video
               </label>
               <label className="form-control">
-                <input type="radio" name="radio" value='audio' checked={audio} 
-                  onClick={() => setAudio(true)}
+                <input type="radio" name="radio" value='audio' checked 
+                  onClick={(e) => setCategory(e.target.value)}
                 />
                 Audio
               </label>
@@ -133,6 +134,7 @@ const Createpod: FC = () => {
               <h4>Upload File</h4>
               <div className="emailContainer"><input type="file" size={60} placeholder="AuthorName" className="emailid" defaultValue=''
                 onChange={(e) => setFile(e.target.files[0])}
+                accept={`${category == 'audio' ? 'audio/*' : 'video/*'}`}
               /></div>
             </div>
 
