@@ -11,9 +11,9 @@ It is a Podcast Web application made using React Js and MongoDb
 Completed
 
 #Installation
-* cd client
-* npm run install
-* npm run dev
+* '''cd client'''
+* '''npm run install'''
+* ''' npm run dev'''
 
 
 
