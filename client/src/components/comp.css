@@ -10,7 +10,7 @@ li{
     left: 0;
     position: fixed;
     background-color: #1b182b;
-    width: 20rem;
+    width: 15rem;
     height: 100%;
     margin-top: 5px ;
     position: fixed;
@@ -132,6 +132,10 @@ li{
     height: 50px;
 }
 
+.profileimg:hover {
+    opacity: 0.8;
+}
+
 .topnav{
     position: fixed;
     display: flex;
@@ -191,4 +195,11 @@ li{
 
 .signout:hover{
     transform: scale(1.1);
+}
+
+#upload {
+    color: #121820;
+    text-decoration: none;
+    font-weight: 800;
+    cursor: pointer;
 }

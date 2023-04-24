@@ -17,6 +17,7 @@ const Createpod: FC = () => {
   const author = useRef()
   const description = useRef()
   const [message, setMessage] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(false)
   const navigate = useNavigate()
   const { getCurrentUser } = user()
 
@@ -25,6 +26,8 @@ const Createpod: FC = () => {
       return setMessage('Enter Required Details')
     }
     try {
+      setLoading(true)
+      setMessage('Please Wait While Uploading')
       const uniqueId = uid(36)
       const imaageRef = ref(storage, `${uniqueId}`)
       await uploadBytes(imaageRef, poster)
@@ -56,11 +59,12 @@ const Createpod: FC = () => {
       console.log(err)
       setMessage('something went wrong')
     }
+    setLoading(false)
   }
 
   return (
     <div>
-      <Sidenav />
+      <Sidenav  btn={'Back To Home'} link={'/explore'} />
       <div className="CreatePodc">
         <h2>Create PodCast</h2>
 
@@ -111,8 +115,12 @@ const Createpod: FC = () => {
               /></div>
             </div>
 
+            <div className="author">
+              <div className={`${message != '' ? "emailContainer message" : 'hidden'}`} >{message}</div>
+            </div>
+
             <div className="publish">
-              <button type='submit' className="savebtn" onClick={() => publish()} >Publish</button>
+              <button type='submit' className="savebtn" onClick={() => publish()} disabled={loading} >Publish</button>
             </div>
           </div>
         </div>

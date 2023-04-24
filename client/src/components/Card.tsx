@@ -1,22 +1,31 @@
 import { FC } from 'react'
 import cardposter from "../assets/cardPoster.jpg"
 import profile from "../assets/profile.png"
+import Play from '../assets/playImg.png'
+import { category } from '../constants/category'
 
 interface Props {
     poster: string, 
     author: string, 
     date: string, 
     title: string, 
-    file: string
+    file: string, 
+    setUrl: Dispatch<string>, 
+    setAudio: Dispatch<string>
 }
 
-const Card: FC<Props> = ({ poster, author, title, date }) => {
+const Card: FC<Props> = ({ poster, author, title, date, file, setUrl, setAudio }) => {
 
     return (
 
         <div className="Card">
             <div className="round sphere">
-                <img src={poster} alt="" className="profileimg" />
+                <img src={Play} alt="" className="profileimg" 
+                    onClick={() => {
+                        setUrl(file)
+                        setAudio(category)
+                    }}
+                />
             </div>
             <img src={cardposter == '' ? profile : poster}  className="cardposter"  />
             <div className="CardDesc">

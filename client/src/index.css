@@ -222,7 +222,7 @@ input:focus, textarea:focus {
 }
 
 .ExplorePage{
-  margin-left: 20rem;
+  margin-left: 15rem;
   margin-top: 4rem;
   right: 0;
 }
@@ -292,4 +292,23 @@ input:focus, textarea:focus {
   cursor: pointer;
   background-color: gold;
   color: #121820;
+}
+
+.player_wrapper {
+  min-height: 90%;
+  width: 450px;
+  background: linear-gradient(90deg, hsla(64, 73%, 16%, 1) 0%, hsla(65, 59%, 31%, 1) 100%);
+  position: absolute;
+  right: 0;
+  top: 63px;
+  margin: 9px;
+  border-radius: 18px;
+  position: fixed;
+}
+
+.message {
+  height: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from 'react'
-import { Sidenav, Cardmax, Card, Topnav } from '../components'
+import { Sidenav, Cardmax, Card, Topnav, Player } from '../components'
 import { category } from '../constants/category'
 import PodcastApi from '../api/register'
 
@@ -8,6 +8,9 @@ import PodcastApi from '../api/register'
 const Explore: FC = () =>{
   const [collection, setCollection] = useState<any>([{}])
   const [activeCategory, setActiveCategory] = useState<string>(category[0].key)
+
+  const [url, setUrl] = useState<string>('')
+  const [audio, setAudio] = useState<boolean>(false)
 
   useEffect(() => {
     const pod = async () => {
@@ -25,12 +28,12 @@ const Explore: FC = () =>{
   return (
     <div style={{top:0,marginTop:0}}>
       <Topnav />
-      <Sidenav active={activeCategory} setActive={setActiveCategory} />
+      <Sidenav active={activeCategory} setActive={setActiveCategory} btn={'Upload'} link={'/create'} />
       <div className='ExplorePage'>
 
       <div className='Discover'>
         <h3 style={{marginLeft:"10px"}}>{activeCategory}</h3>
-        <h4>more {">"}</h4>
+        <h4>more</h4>
       </div>
 
       {activeCategory == 'TRENDING' || activeCategory == 'AUDIO' || activeCategory == 'VIDEO' ? 
@@ -42,7 +45,9 @@ const Explore: FC = () =>{
                 title={clcn.title} 
                 poster={clcn.posterURL} 
                 file={clcn.fileURL} 
-                date={clcn.createdAt.slice(0, 10)}
+                date={clcn.createdAt.slice(0, 10)} 
+                setUrl={setUrl}
+                setAudio={setAudio}
               />
             )
           })}
@@ -58,7 +63,9 @@ const Explore: FC = () =>{
                 title={cl.title} 
                 poster={cl.posterURL} 
                 file={cl.fileURL} 
-                date={cl.createdAt.slice(0, 10)}
+                date={cl.createdAt.slice(0, 10)} 
+                setUrl={setUrl}
+                setAudio={setAudio}
               />
             )
           })}
@@ -74,7 +81,9 @@ const Explore: FC = () =>{
                   title={cl.title} 
                   poster={cl.posterURL} 
                   file={cl.fileURL} 
-                  date={cl.createdAt.slice(0, 10)}
+                  date={cl.createdAt.slice(0, 10)} 
+                  setUrl={setUrl}
+                  setAudio={setAudio}
                 />
               )
             })}
@@ -85,13 +94,16 @@ const Explore: FC = () =>{
             <Cardmax 
               author={clcn.author}
               title={clcn.title}
-              file={clcn.file}
+              file={clcn.fileURL} 
+              setUrl={setUrl}
+              setAudio={setAudio}
             />
           )
         })
       }
-      
       </div>
+      <Player url={url} audio={audio} className='player' />
+
     </div>
   )
 }
