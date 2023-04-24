@@ -18,6 +18,7 @@ const Explore: FC = () =>{
   const { getCurrentUser, prof } = user()
 
   useEffect(() => {
+    localStorage.removeItem('favAdd')
     const pod = async () => {
       const res = await PodcastApi.get('/podcast/get', {
         key: '', 
@@ -137,6 +138,8 @@ const Explore: FC = () =>{
               setUrl={setUrl}
               setAudio={setAudio}
               id={clcn._id}
+              poster={clcn.posterURL} 
+              description={clcn.description}
             />
           )
         })

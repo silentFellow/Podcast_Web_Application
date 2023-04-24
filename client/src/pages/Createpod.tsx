@@ -20,6 +20,11 @@ const Createpod: FC = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const navigate = useNavigate()
   const { getCurrentUser } = user()
+  const [data, setData] = useState<any>([{}])
+
+  useEffect(() => {
+    setData(JSON.parse(localStorage.getItem('favAdd')))
+  }, [])
 
   const publish = async () => {
     if(title?.current?.value == '' || description?.current?.value == '' || author?.current?.value == '' || file == '') {
@@ -80,10 +85,7 @@ const Createpod: FC = () => {
       console.log(err)
       setMessage('something went wrong')
     }
-    
-    setLoading(false)
-  }
-
+  
   return (
     <div>
       <Sidenav  btn={'Back To Home'} link={'/explore'} />
@@ -94,7 +96,7 @@ const Createpod: FC = () => {
           <h3>Upload Thumbnail</h3>
           <div className="Poster">
             <label htmlFor='posterInput'>
-              <img src={Add} alt="" className='cover' />
+              <img src={data?.poster ? data?.poster : Add} alt="" className='cover' />
             </label>
             <input type='file' className='hidden' id='posterInput' accept='image/*' onChange={(e) => {
               setPoster(e.target.files[0]) 
@@ -103,17 +105,21 @@ const Createpod: FC = () => {
 
           <div className="author">
             <h4>PodCast Name</h4>
-            <div className="emailContainer"><input type="text" placeholder="PodCastName" className="emailid" ref={title} defaultValue='' /></div>
+            <div className="emailContainer"><input type="text" placeholder="PodCastName" className="emailid" ref={title} 
+              value={data?.title != '' && data?.title}
+            /></div>
           </div>
           <div className="author">
             <h4>Author Name</h4>
-            <div className="emailContainer"><input type="text" placeholder="AuthorName" className="emailid" ref={author} defaultValue='' /></div>
+            <div className="emailContainer"><input type="text" placeholder="AuthorName" className="emailid" ref={author} 
+              value={data?.author != '' && data?.author}
+            /></div>
           </div>
           <div className="author">
             <h4>PodCast Description</h4>
             <div className="emailContainer"><textarea type="text" placeholder="Description" className="emailid" defaultValue='' ref={description} rows={6} cols={12} /></div>
           </div>
-          <div className="author">
+          <div className={`${data?.update ? 'hidden' : 'author'}`}>
             <h4>Category</h4>
 
             <div style={{ display: "flex", marginTop: "10px" }}>
@@ -138,18 +144,79 @@ const Createpod: FC = () => {
               /></div>
             </div>
 
-            <div className="author">
-              <div className={`${message != '' ? "emailContainer message" : 'hidden'}`} >{message}</div>
-            </div>
-
             <div className="publish">
               <button type='submit' className="savebtn" onClick={() => publish()} disabled={loading} >Publish</button>
             </div>
           </div>
+
+          {/* for update */}
+          <div className="author">
+              <div className={`${message != '' ? "emailContainer message" : 'hidden'}`} >{message}</div>
+            </div>
+          <div className="publish">
+            <button type='submit' className={`${data?.update ? "savebtn" : 'hidden'}`} onClick={() => update()} disabled={loading} >Update</button>
+          </div>
+
         </div>
       </div>
     </div>
   )
-}
+}}
 
 export default Createpod
+
+/* const update = async () => {
+  if(title?.current?.value == '' || description?.current?.value == '' || author?.current?.value == '') {
+    return setMessage('Enter Required Details')
+  }
+  try {
+    setLoading(true)
+    setMessage('Please Wait While Uploading')
+    const uniqueId = uid(36)
+    const imaageRef = ref(storage, `${uniqueId}`)
+    await uploadBytes(imaageRef, poster)
+    const imageUrl = await getDownloadURL(imaageRef)
+
+    const res = await PodcastApi.post('/podcast/update', {
+      uid: data?.uid, 
+      title: title?.current?.value, 
+      description: description?.current?.value, 
+      author: author?.current?.value, 
+      authorId: data?.uid,
+      posterURL: imageUrl, 
+    })
+    if(res.status != 200) {
+      setMessage(res.data)
+    }
+    else {
+      setMessage(res.data)
+      navigate('/explore')
+    }
+
+    const newRes = await PodcastApi.post('/register/dataupdate', {
+      uid: getCurrentUser().uid, 
+      newCollection: {
+        title: title?.current?.value, 
+        description: description?.current?.value, 
+        author: author?.current?.value, 
+        authorId: getCurrentUser().uid, 
+        posterURL: imageUrl, 
+      }, 
+      dataId: data?.file
+    })
+    if(newRes.status != 200) {
+      setMessage(newRes.data)
+    }
+    else {
+      setMessage(newRes.data)
+      navigate('/explore')
+    }
+  }
+  catch(err) {
+    console.log(err)
+    setMessage('something went wrong')
+  }
+  
+  setLoading(false)
+}
+ */

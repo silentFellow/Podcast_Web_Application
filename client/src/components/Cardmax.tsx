@@ -1,5 +1,7 @@
-import { FC } from 'react'
-import { category } from '../constants/category'
+import { FC, useState } from 'react'
+import { user } from '../contexts/users'
+import { Link, useNavigate } from 'react-router-dom'
+import { Createpod } from '../pages'
 
 interface Props {
     author: string, 
@@ -7,10 +9,28 @@ interface Props {
     file: string, 
     setUrl: Dispatch<string>, 
     setAudio: Dispatch<string>, 
-    id: string
+    id: string, 
+    poster: string, 
+    description: string
 }
 
-const Cardmax: FC<Props> = ({ author, title, file, setUrl, setAudio, id }) =>{
+const Cardmax: FC<Props> = ({ author, title, file, setUrl, poster, id, description }) =>{
+
+    const navigate = useNavigate()
+
+    const edit = () => {
+        const details = {
+            author: author, 
+            title: title, 
+            file: file, 
+            poster: poster, 
+            id: id, 
+            description: description, 
+            update: true
+        }
+        localStorage.setItem('favAdd', JSON.stringify(details))
+        navigate('/create')
+    }
 
     return (
 
@@ -26,7 +46,9 @@ const Cardmax: FC<Props> = ({ author, title, file, setUrl, setAudio, id }) =>{
                             setUrl(file)
                         }}
                     >Play Now</button>
-                    <button className="follow">Edit</button>
+                    <button className="follow"
+                        onClick={() => edit()}
+                    >Edit</button>
                 </div>
             </div>
             

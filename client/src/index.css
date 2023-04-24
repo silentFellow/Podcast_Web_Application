@@ -312,3 +312,8 @@ input:focus, textarea:focus {
   justify-content: center;
   align-items: center;
 }
+
+.block {
+  display: flex;
+  margin-top: 10px;
+}

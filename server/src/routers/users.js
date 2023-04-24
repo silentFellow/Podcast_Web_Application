@@ -105,5 +105,26 @@ router.get('/prof', async (req, res) => {
   res.status(200).send(data)
 })
 
+/* // dataUpdate 
+router.post('/dataupdate', async (req, res) => {
+  const { uid, upCollection, dataId } = req.body
+  try {
+    const user = await users.findByIdAndUpdate(uid, {
+      $set: {
+        my_collection: {
+          $set: {
+            
+          }
+        }
+      }
+    })
+
+    res.status(200).send('Uploaded Successfully')
+  }
+  catch(err) {
+    console.log(err)
+  }
+}) */
+
 // exports 
 export { router as userRouter }

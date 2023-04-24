@@ -49,10 +49,10 @@ router.get('/get', async (req, res) => {
 })
 
 router.post('/update', async (req, res) => {
-  const { id, author, authorId, title, posterURL, fileURL } = req.body
+  const { uid, author, authorId, title, posterURL, fileURL } = req.body
 
   try {
-    await podcast.findOneAndUpdate({ _id: id }, {
+    await podcast.findByIdAndUpdate( uid , {
       title, 
       description, 
       category, 
