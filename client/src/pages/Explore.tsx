@@ -36,7 +36,7 @@ const Explore: FC = () =>{
       setFav((ress.data.favourites).reverse())
     }
     pod()
-  }, [search])
+  }, [search, activeCategory])
 
   return (
     <div style={{top:0,marginTop:0}}>
@@ -121,9 +121,10 @@ const Explore: FC = () =>{
                   title={cl.title} 
                   poster={cl.posterURL} 
                   file={cl.fileURL} 
-                  date={cl.createdAt.slice(0, 10)} 
+                  date={cl.createdAt?.slice(0, 10)} 
                   setUrl={setUrl}
                   setAudio={setAudio}
+                  description={cl.description}
                 />
               )
             })}

@@ -96,7 +96,7 @@ const Login = () => {
       </div>
 
         <div className="emailpass">
-          <div className="emailContainer"><input type="text" placeholder="Full Name => [ First Name + Last Name ]" className="emailid" ref={uname} defaultValue='' /></div>
+          <div className="emailContainer"><input type="text" placeholder="Full Name" className="emailid" ref={uname} defaultValue='' /></div>
           <div className="emailContainer"><input type="password" placeholder="password" className="emailid" ref={password} defaultValue='' /></div>
         </div>
       </div>

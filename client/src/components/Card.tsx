@@ -1,8 +1,11 @@
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import cardposter from "../assets/cardPoster.jpg"
 import profile from "../assets/profile.png"
 import Play from '../assets/playImg.png'
 import { category } from '../constants/category'
+import { user } from '../contexts/users'
+import PodcastApi from '../api/register'
+import like from "../assets/like.png"
 
 interface Props {
     poster: string, 
@@ -14,7 +17,39 @@ interface Props {
     setAudio: Dispatch<string>
 }
 
-const Card: FC<Props> = ({ poster, author, title, date, file, setUrl, setAudio }) => {
+const Card: FC<Props> = ({ poster, author, title, date, file, setUrl, setAudio, description }) => {
+
+    const { prof } = user()
+    const [getCurrentUser, setGetCurrentUser] = useState<any>([{}])
+    useEffect(() => {
+        const data = async () => {
+            const dt = await prof()
+            setGetCurrentUser(dt.data)
+            console.log(dt.data)
+        }
+        data()
+    }, [])
+    const liked = async () => {
+        try {
+            const newRes = await PodcastApi.post('/register/update', {
+                uid: getCurrentUser._id, 
+                newCollection: {
+                  title: title, 
+                  description: description, 
+                  author: author, 
+                  authorId: getCurrentUser.uid, 
+                  posterURL: poster, 
+                  fileURL: file
+                }, 
+                category: 'fav'
+            })
+            console.log('liked')
+        }
+        catch(err) {
+            console.log(err)
+        }
+    }
+    
 
     return (
 
@@ -26,6 +61,10 @@ const Card: FC<Props> = ({ poster, author, title, date, file, setUrl, setAudio }
                         setAudio(category)
                     }}
                 />
+                <img src={like} alt="" className='like' height={25} width={30} 
+                    onClick={() => liked()}
+                />
+
             </div>
             <img src={cardposter == '' ? profile : poster}  className="cardposter" loading='lazy'  />
             <div className="CardDesc">
