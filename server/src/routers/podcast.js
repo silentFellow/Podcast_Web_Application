@@ -33,11 +33,11 @@ router.post('/post', async (req, res) => {
 
 router.get('/get', async (req, res) => {
   try {
-    const data = await podcast.find({ key: value })
+    const data = await podcast.find()
     res.status(200).send(data)
   }
   catch {
-    res.status(201).send(data)
+    res.status(201).send('something went wrong')
   }
 })
 
