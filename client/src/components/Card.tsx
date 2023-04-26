@@ -25,7 +25,6 @@ const Card: FC<Props> = ({ poster, author, title, date, file, setUrl, setAudio, 
         const data = async () => {
             const dt = await prof()
             setGetCurrentUser(dt.data)
-            console.log(dt.data)
         }
         data()
     }, [])

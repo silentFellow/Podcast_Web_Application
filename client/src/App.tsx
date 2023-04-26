@@ -1,7 +1,7 @@
 import { FC } from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { Home, Signup, Login, PrivateRouteLogin, PrivateRouteExplore, Createpod, Explore } from "./pages"
-import UsersProvider from "./contexts/users"
+import UsersProvider from './contexts/users'
 
 const App: FC = () => {
   return (
@@ -20,7 +20,6 @@ const App: FC = () => {
         </Routes>
       </UsersProvider>
     </Router>
-  
   )
 }
 

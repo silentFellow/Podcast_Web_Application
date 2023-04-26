@@ -7,7 +7,7 @@ import { user } from '../contexts/users'
 
 const Signup: FC = () => {
 
-  const [loading, setLoading] = useState<boolean>('')
+  const [loading, setLoading] = useState<boolean>(false)
 
   const firstName = useRef()
   const lastName = useRef()
@@ -21,18 +21,18 @@ const Signup: FC = () => {
 
   const SignUp = async () => {
     setMessage('')
-    if(firstName?.current?.value == '' || password?.current?.value == '') {
+    if(firstName.current.value == '' || password.current.value == '') {
       return setMessage("Enter a valid details")
     }
-    if(password?.current?.value != confirmPassword?.current?.value) {
+    if(password.current.value != confirmPassword.current.value) {
       return setMessage('Passwords do no match')
     }
 
     setLoading(true)
-    const name = firstName?.current?.value + lastName?.current?.value || ''
+    const name = firstName.current.value + lastName.current.value || ''
     try {
       setMessage('Please Wait')
-      const res = await signup(name, password?.current?.value)
+      const res = await signup(name, password.current.value)
       if(res.status != 200) {
         setMessage(res)
       }
@@ -49,6 +49,7 @@ const Signup: FC = () => {
 
   const google = async (): Promise<string | void> => {
     setMessage('')
+    setLoading(true)
     try {
       await googleLogin()
       const userName = localStorage.getItem('name')
@@ -62,21 +63,23 @@ const Signup: FC = () => {
         else {
           const res = await login(userName, password, true)
           if(res.status == 200) {
-            console.log(res)
             setCookies('access_token', res.data.access_token)
+            localStorage.setItem('userCred', res.data)
             navigate('/explore')
           }
         }
       }
       else {
-        console.log(res)
         setCookies('access_token', res.data.access_token)
+        localStorage.setItem('userCred', res.data)
         navigate('/explore')
       }
     }
-    catch {
+    catch(err) {
+      console.log(err)
       setMessage('something went wrong')
     }
+    setLoading(false)
   }
 
   return(

@@ -25,17 +25,19 @@ router.post('/signup', async (req, res) => {
       res.status(200).send('Successfullly created')
     }
   }
-  catch {
+  catch(err) {
     console.log('something went wrong')
+    console.log(err)
   }
 })
 
 // login 
 router.post('/login', async (req, res) => {
   const { uname, pass, google } = req.body
+  const user = await users.findOne({ userName: uname })
 
   try {
-    if(await users.findOne({ userName: uname })) {
+    if(user) {
       const currentUser = await users.findOne({ userName: uname })
       const originalpassword = currentUser.password
 
@@ -60,15 +62,6 @@ router.post('/login', async (req, res) => {
   catch {
     console.log('Something went wrong')
   }
-})
-
-// details 
-router.get('/userDetails', async (req, res) => {
-  const { userName } = req.query
-
-  const details = await users.findOne({ userName: userName })
-
-  res.send(details)
 })
 
 // poster update 
@@ -98,7 +91,7 @@ router.post('/update', async (req, res) => {
 })
 
 // prof 
-router.get('/prof', async (req, res) => {
+router.get('/profile', async (req, res) => {
   const { uid } = req.query
 
   const data = await users.findById( uid )

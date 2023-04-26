@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from 'react'
+import { FC, useState, useEffect, useCallback } from 'react'
 import { Sidenav, Cardmax, Card, Topnav, Player } from '../components'
 import { user } from '../contexts/users'
 import { category } from '../constants/category'
@@ -15,28 +15,26 @@ const Explore: FC = () =>{
 
   const [url, setUrl] = useState<string>('')
   const [audio, setAudio] = useState<boolean>(false)
-  const { getCurrentUser, prof } = user()
+  const { prof } = user()
+
 
   useEffect(() => {
     localStorage.removeItem('favAdd')
-    const pod = async () => {
-      const res = await PodcastApi.get('/podcast/get', {
-        key: '', 
-        value: ''
-      })
-      const data = (res.data).reverse()
-      if(search == '') {
-        setCollection(data)
+      const dt = async () => {
+        const res = await PodcastApi.get('/podcast/get')
+        const data = (res.data).reverse()
+        if(search == '') {
+          setCollection(data)
+        }
+        else {
+          setCollection(data.filter(data => data.title.toLowerCase().includes(search.toLowerCase())))
+        }
+        const ress = await prof()
+        setCollect((ress.data.my_collection).reverse())
+        setFav((ress.data.favourites).reverse())
       }
-      else {
-        setCollection(data.filter(data => data.title.toLowerCase().includes(search.toLowerCase())))
-      }
-      const ress = await prof()
-      setCollect((ress.data.my_collection).reverse())
-      setFav((ress.data.favourites).reverse())
-    }
-    pod()
-  }, [search, activeCategory])
+      dt()
+  }, [search])
 
   return (
     <div style={{top:0,marginTop:0}}>

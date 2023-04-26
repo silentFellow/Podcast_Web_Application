@@ -1,7 +1,5 @@
-import { FC, useState } from 'react'
-import { user } from '../contexts/users'
-import { Link, useNavigate } from 'react-router-dom'
-import { Createpod } from '../pages'
+import { FC } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 interface Props {
     author: string, 

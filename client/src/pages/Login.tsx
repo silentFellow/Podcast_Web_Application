@@ -10,8 +10,8 @@ const Login = () => {
   const [loading, setLoading] = useState<boolean>(false)
 
   const { login, googleLogin, signup } = user()
-  const uname = useRef()
-  const password = useRef()
+  const uname = useRef('')
+  const password = useRef('')
   const [message, setMessage] = useState<string>('')
   const [_, setCookies] = useCookies(['access_token'])
   const navigate = useNavigate()
@@ -19,29 +19,26 @@ const Login = () => {
   const signin = async (): Promise<string | void> => {
     setMessage('')
     
-    if(uname?.current?.value == '' || password?.current?.value == '') {
+    if(uname.current.value == '' || password.current.value == '') {
       return setMessage('Enter details')
     }
     else {
       setLoading(true)
       try {
         setMessage('Please Wait')
-        const res = await login(uname?.current?.value, password?.current?.value)
+        const res = await login(uname.current.value, password.current.value)
         if(res.status != 200) {
-          console.log(res)
           setMessage(res.data)
         }
         else {
-          console.log(res)
           setCookies('access_token', res.data.access_token)
-          localStorage.setItem('uid', res.data.uid)
-          localStorage.setItem('name', uname?.current?.value)
+          localStorage.setItem('userCred', res.data)
           navigate('/explore')
         }
       }
       catch(err) {
-        console.log(err)
         setMessage('something went wrong')
+        console.log(err)
       }
     }
     setLoading(false)
@@ -51,9 +48,9 @@ const Login = () => {
     setMessage('')
     setLoading(true)
     try {
-      await googleLogin()
-      const userName = localStorage.getItem('name')
-      const password = localStorage.getItem('pass')
+      const google = await googleLogin()
+      const userName = google.user.displayName
+      const password = google.user.email
       const res = await login(userName, password, true)
       if(res.status != 200) {
         const res = await signup(userName, password, true)
@@ -64,14 +61,12 @@ const Login = () => {
           const res = await login(userName, password, true)
           if(res.status == 200) {
             setCookies('access_token', res.data.access_token)
-            localStorage.setItem('name', uname?.current?.value)
             navigate('/explore')
           }
         }
       }
       else {
         setCookies('access_token', res.data.access_token)
-        localStorage.setItem('name', uname?.current?.value)
         navigate('/explore')
       }
     }

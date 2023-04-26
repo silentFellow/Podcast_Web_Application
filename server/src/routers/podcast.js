@@ -32,16 +32,9 @@ router.post('/post', async (req, res) => {
 })
 
 router.get('/get', async (req, res) => {
-  const { key, value } = req.query
   try {
-    if(key == '' || value == '') {
-      const data = await podcast.find()
-      res.status(200).send(data)
-    }
-    else {
-      const data = await podcast.find({ key: value })
-      res.status(200).send(data)
-    }
+    const data = await podcast.find({ key: value })
+    res.status(200).send(data)
   }
   catch {
     res.status(201).send(data)

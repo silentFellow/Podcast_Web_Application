@@ -26,7 +26,6 @@ const Sidenav: FC<Props> = ({ active, setActive, btn, link }) => {
         </ul>
         <button className="savebtn"><Link to={link} id='upload'>{btn}</Link></button>
       </div>
-     
     </div>
   )
 }

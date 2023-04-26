@@ -40,7 +40,7 @@ const UsersProvider: FC<Props> = ({ children }) => {
       pass: pass, 
       google: verified
     })
-    console.log(res.data)
+    
     if(res.status == 200) {
       localStorage.setItem('userCred', JSON.stringify(res.data))
     }
@@ -50,24 +50,13 @@ const UsersProvider: FC<Props> = ({ children }) => {
   const googleLogin = async () => {
     try {
       const data = await signInWithPopup(auth, googleAuth)
-      console.log(data)
-      localStorage.setItem('name', data.user.displayName)
-      localStorage.setItem('pass', data.user.email)
+      
+      return data
     }
     catch(err) {
-      console.log(err)
       console.log('something went wrong')
+      console.log(err)
     }
-  }
-
-  const currentUser = async (uname: string) => {
-    const res = await userApi.get('/register/userDetails', {
-      params: {
-        userName: uname
-      }
-    })
-
-    return res
   }
 
   const signout = async (): Promise<void> => {
@@ -78,10 +67,8 @@ const UsersProvider: FC<Props> = ({ children }) => {
     localStorage.clear()
   }
 
-  const getCurrentUser = () => JSON.parse(localStorage.getItem('userCred'))
-
   const prof = async () => {
-    const id = localStorage.getItem('uid')
+    const id = JSON.parse(localStorage.getItem('userCred')).uid
 
     try {
       const res = await userApi.get('/register/prof', {
@@ -102,8 +89,6 @@ const UsersProvider: FC<Props> = ({ children }) => {
     login, 
     googleLogin, 
     users, 
-    currentUser, 
-    getCurrentUser, 
     prof, 
     signout
   }

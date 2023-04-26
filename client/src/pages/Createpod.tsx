@@ -10,8 +10,8 @@ import { uid } from 'uid'
 
 const Createpod: FC = () => {
 
-  const [poster, setPoster] = useState<any>()
-  const [file, setFile] = useState<any>()
+  const [poster, setPoster] = useState<any>('')
+  const [file, setFile] = useState<any>('')
   const [category, setCategory] = useState<string>('audio')
   const title = useRef()
   const author = useRef()
@@ -19,11 +19,22 @@ const Createpod: FC = () => {
   const [message, setMessage] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const navigate = useNavigate()
-  const { getCurrentUser } = user()
   const [data, setData] = useState<any>([{}])
+  const { prof } = user()
+  const [uuid, setUuid] = useState<string>('')
 
   useEffect(() => {
     setData(JSON.parse(localStorage.getItem('favAdd')))
+    const id = async () => {
+      try {
+        const res = await prof()
+        setUuid(res.data._id)
+      }
+      catch(err) {
+        console.log(err)
+      }
+    }
+    id()
   }, [])
 
   const publish = async () => {
@@ -48,7 +59,7 @@ const Createpod: FC = () => {
         description: description?.current?.value, 
         category: category, 
         author: author?.current?.value, 
-        authorId: getCurrentUser().uid,
+        authorId: uiud,
         posterURL: imageUrl, 
         fileURL: fileUrl
       })
@@ -61,13 +72,13 @@ const Createpod: FC = () => {
       }
 
       const newRes = await PodcastApi.post('/register/update', {
-        uid: getCurrentUser().uid, 
+        uid: uuid, 
         newCollection: {
           title: title?.current?.value, 
           description: description?.current?.value, 
           category: category, 
           author: author?.current?.value, 
-          authorId: getCurrentUser().uid, 
+          authorId: uiud, 
           posterURL: imageUrl, 
           fileURL: fileUrl
         }, 
@@ -85,7 +96,7 @@ const Createpod: FC = () => {
       console.log(err)
       setMessage('something went wrong')
     }
-  
+  }
   return (
     <div>
       <Sidenav  btn={'Back To Home'} link={'/explore'} />
@@ -161,7 +172,7 @@ const Createpod: FC = () => {
       </div>
     </div>
   )
-}}
+}
 
 export default Createpod
 
@@ -194,12 +205,12 @@ export default Createpod
     }
 
     const newRes = await PodcastApi.post('/register/dataupdate', {
-      uid: getCurrentUser().uid, 
+      uid: uid, 
       newCollection: {
         title: title?.current?.value, 
         description: description?.current?.value, 
         author: author?.current?.value, 
-        authorId: getCurrentUser().uid, 
+        authorId: uid, 
         posterURL: imageUrl, 
       }, 
       dataId: data?.file
