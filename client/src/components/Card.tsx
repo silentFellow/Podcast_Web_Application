@@ -28,6 +28,7 @@ const Card: FC<Props> = ({ poster, author, title, date, file, setUrl, setAudio, 
         }
         data()
     }, [])
+    
     const liked = async () => {
         try {
             const newRes = await PodcastApi.post('/register/update', {

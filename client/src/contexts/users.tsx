@@ -71,7 +71,7 @@ const UsersProvider: FC<Props> = ({ children }) => {
     const id = JSON.parse(localStorage.getItem('userCred')).uid
 
     try {
-      const res = await userApi.get('/register/prof', {
+      const res = await userApi.get('/register/profile', {
         params: {
           uid: id
         }
