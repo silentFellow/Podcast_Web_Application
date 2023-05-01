@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { podcast } from '../contexts'
 
 interface Props {
     author: string, 
@@ -15,6 +16,7 @@ interface Props {
 const Cardmax: FC<Props> = ({ author, title, file, setUrl, poster, id, description }) =>{
 
     const navigate = useNavigate()
+    const { deletePod } = podcast()
 
     const edit = () => {
         const details = {
@@ -27,7 +29,11 @@ const Cardmax: FC<Props> = ({ author, title, file, setUrl, poster, id, descripti
             update: true
         }
         localStorage.setItem('favAdd', JSON.stringify(details))
-        navigate('/create')
+        navigate('/update')
+    }
+
+    const remove = async () => {
+        await deletePod(id)
     }
 
     return (
@@ -47,6 +53,9 @@ const Cardmax: FC<Props> = ({ author, title, file, setUrl, poster, id, descripti
                     <button className="follow"
                         onClick={() => edit()}
                     >Edit</button>
+                    <button className="follow"
+                        onClick={() => remove()}
+                    >delete</button>
                 </div>
             </div>
             

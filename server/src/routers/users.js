@@ -66,27 +66,19 @@ router.post('/login', async (req, res) => {
 
 // poster update 
 router.post('/update', async (req, res) => {
-  const { uid, newCollection, category } = req.body
+  const { uid, newCollection } = req.body
   try {
-    if(category == 'mine') {
-      const currentUser = await users.findByIdAndUpdate(uid, {
-        $push: {
-          my_collection: newCollection
-        }
-      })
-    }
-    else if(category == 'fav') {
-      const currentUser = await users.findByIdAndUpdate(uid, {
-        $push: {
-          favourites: newCollection
-        }
-      })
-    }
+    const currentUser = await users.findByIdAndUpdate(uid, {
+      $push: {
+        favourites: newCollection
+      }
+    })
 
     res.status(200).send('Uploaded Successfully')
   }
   catch(err) {
     console.log(err)
+    res.status(201).send('Something went wrong')
   }
 })
 

@@ -1,16 +1,17 @@
-import { FC } from 'react'
+import { Dispatch, FC } from 'react'
 import { Link } from 'react-router-dom'
 import { category } from '../constants/category'
 import './comp.css'
 
 interface Props {
+  setCollection: Dispatch<[{}]>, 
   active: string, 
   setActive: any, 
   btn: string, 
   link: string
 }
 
-const Sidenav: FC<Props> = ({ active, setActive, btn, link }) => {
+const Sidenav: FC<Props> = ({ setCollection, active, setActive, btn, link }) => {
   return (
     <div className='components'>
       <div className='Sidenav'>
@@ -18,7 +19,10 @@ const Sidenav: FC<Props> = ({ active, setActive, btn, link }) => {
           {category.map(category => {
             return (
               <li key={category.key}
-                onClick={() => setActive(category.key)}
+                onClick={() => {
+                  setCollection(null)
+                  setActive(category.key)
+                }}
                 className={`${active == category.key ? 'selected' : 'category'}`}
               >{category.title}</li>
             )

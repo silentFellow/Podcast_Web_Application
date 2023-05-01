@@ -40,7 +40,7 @@ const UsersProvider: FC<Props> = ({ children }) => {
       pass: pass, 
       google: verified
     })
-    
+
     if(res.status == 200) {
       localStorage.setItem('userCred', JSON.stringify(res.data))
     }
@@ -84,12 +84,22 @@ const UsersProvider: FC<Props> = ({ children }) => {
     }
   }
 
+  const updateProf = async (clcn: string) => {
+    const user = JSON.parse(localStorage.getItem('userCred'))
+    const res = await userApi.post('/register/update', {
+      uid: user.uid, 
+      newCollection: clcn
+    })
+    return res
+  }
+
   const value = {
     signup, 
     login, 
     googleLogin, 
     users, 
     prof, 
+    updateProf, 
     signout
   }
 

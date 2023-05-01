@@ -32,7 +32,6 @@ const Login = () => {
         }
         else {
           setCookies('access_token', res.data.access_token)
-          localStorage.setItem('userCred', res.data)
           navigate('/explore')
         }
       }

@@ -1,14 +1,13 @@
-import { FC, useState, useRef, useEffect } from 'react'
+import { FC, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import PodcastApi from '../api/register'
 import { Sidenav } from '../components'
 import { Add } from '../assets'
-import { user } from '../contexts/users'
+import { podcast } from '../contexts'
 import { storage } from '../firebase'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { uid } from 'uid'
 
-const Createpod: FC = () => {
+const CreatePod: FC = () => {
 
   const [poster, setPoster] = useState<any>('')
   const [file, setFile] = useState<any>('')
@@ -19,23 +18,9 @@ const Createpod: FC = () => {
   const [message, setMessage] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const navigate = useNavigate()
-  const [data, setData] = useState<any>([{}])
-  const { prof } = user()
-  const [uuid, setUuid] = useState<string>('')
-
-  useEffect(() => {
-    setData(JSON.parse(localStorage.getItem('favAdd')))
-    const id = async () => {
-      try {
-        const res = await prof()
-        setUuid(res.data._id)
-      }
-      catch(err) {
-        console.log(err)
-      }
-    }
-    id()
-  }, [])
+  const [imgPercentage, setImgPercentage] = useState<string>('')
+  const [filePercentage, setFilePercentage] = useState<string>('')
+  const { createPod, docPercentage } = podcast()
 
   const publish = async () => {
     if(title?.current?.value == '' || description?.current?.value == '' || author?.current?.value == '' || file == '') {
@@ -54,41 +39,20 @@ const Createpod: FC = () => {
       await uploadBytes(fileRef, file)
       const fileUrl = await getDownloadURL(fileRef)
 
-      const res = await PodcastApi.post('/podcast/post', {
-        title: title?.current?.value, 
-        description: description?.current?.value, 
-        category: category, 
-        author: author?.current?.value, 
-        authorId: uiud,
-        posterURL: imageUrl, 
-        fileURL: fileUrl
-      })
+      const res = await createPod(
+        title?.current?.value, 
+        description?.current?.value, 
+        category, 
+        author?.current?.value, 
+        imageUrl, 
+        fileUrl
+      )
+      console.log(res)
       if(res.status != 200) {
-        setMessage(res.data)
+        setMessage('something went wrong')
       }
       else {
-        setMessage(res.data)
-        navigate('/explore')
-      }
-
-      const newRes = await PodcastApi.post('/register/update', {
-        uid: uuid, 
-        newCollection: {
-          title: title?.current?.value, 
-          description: description?.current?.value, 
-          category: category, 
-          author: author?.current?.value, 
-          authorId: uiud, 
-          posterURL: imageUrl, 
-          fileURL: fileUrl
-        }, 
-        category: 'mine'
-      })
-      if(newRes.status != 200) {
-        setMessage(newRes.data)
-      }
-      else {
-        setMessage(newRes.data)
+        setMessage('Uploaded Successfully')
         navigate('/explore')
       }
     }
@@ -97,6 +61,7 @@ const Createpod: FC = () => {
       setMessage('something went wrong')
     }
   }
+
   return (
     <div>
       <Sidenav  btn={'Back To Home'} link={'/explore'} />
@@ -107,7 +72,7 @@ const Createpod: FC = () => {
           <h3>Upload Thumbnail</h3>
           <div className="Poster">
             <label htmlFor='posterInput'>
-              <img src={data?.poster ? data?.poster : Add} alt="" className='cover' />
+              <img src={Add} alt="" className='cover' />
             </label>
             <input type='file' className='hidden' id='posterInput' accept='image/*' onChange={(e) => {
               setPoster(e.target.files[0]) 
@@ -116,21 +81,17 @@ const Createpod: FC = () => {
 
           <div className="author">
             <h4>PodCast Name</h4>
-            <div className="emailContainer"><input type="text" placeholder="PodCastName" className="emailid" ref={title} 
-              value={data?.title != '' && data?.title}
-            /></div>
+            <div className="emailContainer"><input type="text" placeholder="PodCastName" className="emailid" ref={title} /></div>
           </div>
           <div className="author">
             <h4>Author Name</h4>
-            <div className="emailContainer"><input type="text" placeholder="AuthorName" className="emailid" ref={author} 
-              value={data?.author != '' && data?.author}
-            /></div>
+            <div className="emailContainer"><input type="text" placeholder="AuthorName" className="emailid" ref={author} /></div>
           </div>
           <div className="author">
             <h4>PodCast Description</h4>
             <div className="emailContainer"><textarea type="text" placeholder="Description" className="emailid" defaultValue='' ref={description} rows={6} cols={12} /></div>
           </div>
-          <div className={`${data?.update ? 'hidden' : 'author'}`}>
+          <div className={'author'}>
             <h4>Category</h4>
 
             <div style={{ display: "flex", marginTop: "10px" }}>
@@ -141,7 +102,7 @@ const Createpod: FC = () => {
                 Video
               </label>
               <label className="form-control">
-                <input type="radio" name="radio" value='audio' checked 
+                <input type="radio" name="radio" value='audio' defaultChecked
                   onClick={(e) => setCategory(e.target.value)}
                 />
                 Audio
@@ -155,79 +116,17 @@ const Createpod: FC = () => {
               /></div>
             </div>
 
+            <div className="author">
+              <div className={`${message != '' ? "emailContainer message" : 'hidden'}`} >{message}</div>
+            </div>
             <div className="publish">
               <button type='submit' className="savebtn" onClick={() => publish()} disabled={loading} >Publish</button>
             </div>
           </div>
-
-          {/* for update */}
-          <div className="author">
-              <div className={`${message != '' ? "emailContainer message" : 'hidden'}`} >{message}</div>
-            </div>
-          <div className="publish">
-            <button type='submit' className={`${data?.update ? "savebtn" : 'hidden'}`} onClick={() => update()} disabled={loading} >Update</button>
-          </div>
-
         </div>
       </div>
     </div>
   )
 }
 
-export default Createpod
-
-/* const update = async () => {
-  if(title?.current?.value == '' || description?.current?.value == '' || author?.current?.value == '') {
-    return setMessage('Enter Required Details')
-  }
-  try {
-    setLoading(true)
-    setMessage('Please Wait While Uploading')
-    const uniqueId = uid(36)
-    const imaageRef = ref(storage, `${uniqueId}`)
-    await uploadBytes(imaageRef, poster)
-    const imageUrl = await getDownloadURL(imaageRef)
-
-    const res = await PodcastApi.post('/podcast/update', {
-      uid: data?.uid, 
-      title: title?.current?.value, 
-      description: description?.current?.value, 
-      author: author?.current?.value, 
-      authorId: data?.uid,
-      posterURL: imageUrl, 
-    })
-    if(res.status != 200) {
-      setMessage(res.data)
-    }
-    else {
-      setMessage(res.data)
-      navigate('/explore')
-    }
-
-    const newRes = await PodcastApi.post('/register/dataupdate', {
-      uid: uid, 
-      newCollection: {
-        title: title?.current?.value, 
-        description: description?.current?.value, 
-        author: author?.current?.value, 
-        authorId: uid, 
-        posterURL: imageUrl, 
-      }, 
-      dataId: data?.file
-    })
-    if(newRes.status != 200) {
-      setMessage(newRes.data)
-    }
-    else {
-      setMessage(newRes.data)
-      navigate('/explore')
-    }
-  }
-  catch(err) {
-    console.log(err)
-    setMessage('something went wrong')
-  }
-  
-  setLoading(false)
-}
- */
+export default CreatePod

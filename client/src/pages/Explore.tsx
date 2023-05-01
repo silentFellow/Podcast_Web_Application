@@ -1,45 +1,56 @@
 import { FC, useState, useEffect } from 'react'
 import { Sidenav, Cardmax, Card, Topnav, Player } from '../components'
-import { user } from '../contexts/users'
+import { podcast } from '../contexts'
 import { category } from '../constants/category'
-import PodcastApi from '../api/register'
 
 <link href="https://fonts.googleapis.com/css?family=Bungee+Inline" rel="stylesheet"></link>
 
-const Explore: FC = () =>{
-  const [collect, setCollect] = useState<any>([{}])
-  const [fav, setFav] = useState<any>([{}])
-  const [collection, setCollection] = useState<any>([{}])
+const Explore: FC = () => {
+  const [collection, setCollection] = useState<any>([])
   const [activeCategory, setActiveCategory] = useState<string>(category[0].key)
   const [search, setSearch] = useState<string>('')
 
   const [url, setUrl] = useState<string>('')
   const [audio, setAudio] = useState<boolean>(false)
-  const { prof } = user()
+  const { fullCollection, formatedCollection, myCollection, favourites } = podcast()
 
   useEffect(() => {
     localStorage.removeItem('favAdd')
-    const dt = async () => {
-      const res = await PodcastApi.get('/podcast/get')
-      const data = (res.data).reverse()
-      if(search == '') {
-        setCollection(data)
+    const getData = async () => {
+      const dt = {
+        'TRENDING': fullCollection(), 
+        'EXPLORE': fullCollection(), 
+        'AUDIO': formatedCollection('audio'), 
+        'VIDEO': formatedCollection('video'), 
+        'MY_COLLECTION': myCollection(), 
+        'FAVOURITES': favourites()
       }
-      else {
-        setCollection(data.filter(data => data.title.toLowerCase().includes(search.toLowerCase())))
-      }
-      const ress = await prof()
-      console.log(ress)
-      setCollect((ress.data.my_collection).reverse())
-      setFav((ress.data.favourites).reverse())
+
+      const data = await dt[activeCategory]
+      
+      setCollection(data?.data?.sort((a, b) => {
+        if(a.createdAt > b.createdAt) {
+          return 1
+        }
+      }))
+      localStorage.setItem('currentCollection', JSON.stringify(data?.data?.reverse()))
     }
-    dt()
+
+    getData()
+  }, [activeCategory])
+
+  useEffect(() => {
+    const oldCollection = JSON.parse(localStorage.getItem('currentCollection'))
+    setCollection(oldCollection)
+    if(search != '') {
+      setCollection(collection?.filter(clcn => clcn.title.toLowerCase().includes(search.toLowerCase())))
+    }
   }, [search])
 
   return (
     <div style={{top:0,marginTop:0}}>
       <Topnav setSearch={setSearch} />
-      <Sidenav active={activeCategory} setActive={setActiveCategory} btn={'Upload'} link={'/create'} />
+      <Sidenav setCollection={setCollection} active={activeCategory} setActive={setActiveCategory} btn={'Upload'} link={'/create'} />
       <div className='ExplorePage'>
 
       <div className='Discover'>
@@ -48,9 +59,10 @@ const Explore: FC = () =>{
 
       {activeCategory != 'MY_COLLECTION' ? 
         <div className="card_grid">
-          {activeCategory == 'EXPLORE' && collection.map((clcn: any) => {
+          {collection?.map((clcn: any) => {
             return (
               <Card 
+                key={clcn._id}
                 author={clcn.author} 
                 title={clcn.title} 
                 poster={clcn.posterURL} 
@@ -58,79 +70,16 @@ const Explore: FC = () =>{
                 date={clcn.createdAt?.slice(0, 10)} 
                 setUrl={setUrl}
                 setAudio={setAudio}
+                fileId={clcn._id}
               />
             )
           })}
-
-          {activeCategory == 'TRENDING' && collection.map((clcn: any) => {
-            return (
-              <Card 
-                author={clcn.author} 
-                title={clcn.title} 
-                poster={clcn.posterURL} 
-                file={clcn.fileURL} 
-                date={clcn.createdAt.slice(0, 10)} 
-                setUrl={setUrl}
-                setAudio={setAudio}
-              />
-            )
-          })}
-
-          {activeCategory == 'AUDIO' && collection.filter((clcn) => {
-            if(clcn.category == 'audio') {
-              return clcn
-            }
-          }).map((cl) => {
-            return (
-              <Card 
-                author={cl.author} 
-                title={cl.title} 
-                poster={cl.posterURL} 
-                file={cl.fileURL} 
-                date={cl.createdAt.slice(0, 10)} 
-                setUrl={setUrl}
-                setAudio={setAudio}
-              />
-            )
-          })}
-
-          {activeCategory == 'VIDEO' && collection.filter((clcn) => {
-            if(clcn.category == 'video') {
-              return clcn
-            }
-            }).map((cl) => {
-              return (
-                <Card 
-                  author={cl.author} 
-                  title={cl.title} 
-                  poster={cl.posterURL} 
-                  file={cl.fileURL} 
-                  date={cl.createdAt.slice(0, 10)} 
-                  setUrl={setUrl}
-                  setAudio={setAudio}
-                />
-              )
-            })}
-
-          {activeCategory == 'FAVOURITES' && fav.map((cl) => {
-              return (
-                <Card 
-                  author={cl.author} 
-                  title={cl.title} 
-                  poster={cl.posterURL} 
-                  file={cl.fileURL} 
-                  date={cl.createdAt?.slice(0, 10)} 
-                  setUrl={setUrl}
-                  setAudio={setAudio}
-                  description={cl.description}
-                />
-              )
-            })}
         </div> 
         :
-        activeCategory == 'MY_COLLECTION' && collect.map((clcn) => {
+        activeCategory == 'MY_COLLECTION' && collection?.map((clcn) => {
           return (
             <Cardmax 
+              key={clcn._id}
               author={clcn.author}
               title={clcn.title}
               file={clcn.fileURL} 

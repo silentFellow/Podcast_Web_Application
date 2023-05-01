@@ -8,8 +8,7 @@ const userSchema = new mongoose.Schema({
     type: String,
   }, 
   google: Boolean, 
-  my_collection: [{}], 
-  favourites: [{}]
+  favourites: []
 })
 
 export default mongoose.model('users', userSchema)
