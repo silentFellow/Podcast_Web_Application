@@ -51,9 +51,9 @@ const Signup: FC = () => {
     setMessage('')
     setLoading(true)
     try {
-      await googleLogin()
-      const userName = localStorage.getItem('name')
-      const password = localStorage.getItem('pass')
+      const google = await googleLogin()
+      const userName = google.user.displayName
+      const password = google.user.email
       const res = await login(userName, password, true)
       if(res.status != 200) {
         const res = await signup(userName, password, true)
@@ -64,14 +64,12 @@ const Signup: FC = () => {
           const res = await login(userName, password, true)
           if(res.status == 200) {
             setCookies('access_token', res.data.access_token)
-            localStorage.setItem('userCred', res.data)
             navigate('/explore')
           }
         }
       }
       else {
         setCookies('access_token', res.data.access_token)
-        localStorage.setItem('userCred', res.data)
         navigate('/explore')
       }
     }
