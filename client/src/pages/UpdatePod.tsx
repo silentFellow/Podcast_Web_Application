@@ -4,21 +4,30 @@ import { Sidenav } from '../components'
 import { Add } from '../assets'
 import { podcast } from '../contexts'
 import { storage } from '../firebase'
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { uid } from 'uid'
+import { Line } from 'rc-progress'
 
 const UpdatePod: FC = () => {
 
   const [data, setData] = useState([])
-  const [poster, setPoster] = useState<string>(data?.poster)
+  const [poster, setPoster] = useState<string>('')
   const title = useRef()
   const author = useRef()
   const description = useRef()
+
   const [message, setMessage] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
+
   const navigate = useNavigate()
   
-  const { updatePod } = podcast()
+  const [imgSize, setImgSize] = useState<number>(0)
+  const [uploadedSize, setUploadedSize] = useState<number>(0)
+  const [totalSize, setTotalSize] = useState<number>(0)
+  const [percentage, setPercentage] = useState<number>(0)
+  let imageUrl: string
+
+  const { updatePod, docPercentage } = podcast()
 
   useEffect(() => {
     const dt = localStorage.getItem('favAdd')
@@ -27,7 +36,13 @@ const UpdatePod: FC = () => {
     }
     const details = JSON.parse(dt)
     setData(details)
-  })
+    imageUrl = data?.poster
+  }, [])
+
+  useEffect(() => {
+    const per = Math.round((((uploadedSize * 100) / totalSize) * 0.96) + (docPercentage * 0.04))
+    setPercentage(per)
+  }, [uploadedSize, docPercentage])
 
   const update = async () => {
     if(title?.current?.value == '' || description?.current?.value == '' || author?.current?.value == '') {
@@ -36,30 +51,55 @@ const UpdatePod: FC = () => {
     try {
       setLoading(true)
       setMessage('Please Wait While Uploading')
-      const uniqueId = uid(36)
-      const imaageRef = ref(storage, `${uniqueId}`)
-      await uploadBytes(imaageRef, poster)
-      const imageUrl = await getDownloadURL(imaageRef)
-  
-      const res = await updatePod(
-        data?.id, 
-        title?.current?.value, 
-        description?.current?.value, 
-        author?.current?.value, 
-        imageUrl
-      )
-      if(res.status != 200) {
-        setMessage(res.data)
+
+      setTotalSize(imgSize)
+      const docUpload = async () => {
+        const res = await updatePod(
+          data?.id, 
+          title?.current?.value, 
+          description?.current?.value, 
+          author?.current?.value, 
+          imageUrl
+        )
+        if(res.status != 200) {
+          setMessage(res.data)
+        }
+        else {
+          setMessage(res.data)
+          navigate('/explore')
+        }
       }
-      else {
-        setMessage(res.data)
-        navigate('/explore')
+
+      const imgUpload = async () => {
+        if(data?.poster == poster) {
+          docUpload()
+        }
+        else {
+          const uniqueId = uid(36)
+          const imaageRef = ref(storage, `${uniqueId}`)
+          const imageUp = uploadBytesResumable(imaageRef, poster)
+          imageUp.on('state_changed', 
+            (snap) => setUploadedSize(uploadedSize + snap.bytesTransferred), 
+            (err) => console.log(err), 
+            async () => {
+              const res = await getDownloadURL(imageUp.snapshot.ref)
+              imageUrl = res
+              docUpload()
+            }
+          )
+        }
       }
+
+      imgUpload()
     }
     catch {
       setMessage('Something went wrong')
     }
-    setLoading(false)
+    finally {
+      setLoading(false)
+      setUploadedSize(0)
+      setPercentage(0)
+    }
   }
 
   return (
@@ -75,8 +115,12 @@ const UpdatePod: FC = () => {
               <img src={data?.poster != '' ? data?.poster : Add} alt="" className='cover' />
             </label>
             <input type='file' className='hidden' id='posterInput' accept='image/*' onChange={(e) => {
-              setPoster(e.target.files[0]) 
-            }} />
+                setPoster(e.target.files[0]) 
+                setImgSize(e.target.files[0].size)
+              }} 
+              disabled={loading} 
+              defaultValue={data?.poster}
+            />
           </div>
 
           <div className="author">
@@ -99,6 +143,15 @@ const UpdatePod: FC = () => {
           </div>
           <div className={'author'}>
 
+            <div className={`${percentage == 0 || isNaN(percentage) ? 'hidden' : 'block percentage'}`}>
+              <Line 
+                percent={percentage}
+                strokeColor='#808080'
+                strokeWidth={5}
+                trailColor='#f5f5f5'
+              />
+              <h3>{percentage}%</h3>
+            </div>
             <div className="author">
               <div className={`${message != '' ? "emailContainer message" : 'hidden'}`} >{message}</div>
             </div>

@@ -1,11 +1,12 @@
-import { FC, useState, useRef } from 'react'
+import { FC, useState, useRef , useEffect} from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Sidenav } from '../components'
 import { Add } from '../assets'
 import { podcast } from '../contexts'
 import { storage } from '../firebase'
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { uid } from 'uid'
+import { Line } from 'rc-progress'
 
 const CreatePod: FC = () => {
 
@@ -15,12 +16,26 @@ const CreatePod: FC = () => {
   const title = useRef()
   const author = useRef()
   const description = useRef()
+
   const [message, setMessage] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
+
   const navigate = useNavigate()
-  const [imgPercentage, setImgPercentage] = useState<string>('')
-  const [filePercentage, setFilePercentage] = useState<string>('')
+
+  const [imgSize, setImgSize] = useState<number>(0)
+  const [fileSize, setFileSize] = useState<number>(0)
+  const [uploadedSize, setUploadedSize] = useState<number>(0)
+  const [totalSize, setTotalSize] = useState<number>(0)
+  const [percentage, setPercentage] = useState<number>(0)
+  let imageUrl: string
+  let fileUrl: string
+
   const { createPod, docPercentage } = podcast()
+  
+  useEffect(() => {
+    const per = Math.round((((uploadedSize * 100) / totalSize) * 0.96) + (docPercentage * 0.04))
+    setPercentage(per)
+  }, [uploadedSize, docPercentage])
 
   const publish = async () => {
     if(title?.current?.value == '' || description?.current?.value == '' || author?.current?.value == '' || file == '') {
@@ -29,36 +44,72 @@ const CreatePod: FC = () => {
     try {
       setLoading(true)
       setMessage('Please Wait While Uploading')
-      const uniqueId = uid(36)
-      const imaageRef = ref(storage, `${uniqueId}`)
-      await uploadBytes(imaageRef, poster)
-      const imageUrl = await getDownloadURL(imaageRef)
 
-      const newId = uid(36)
-      const fileRef = ref(storage, `${newId}`)
-      await uploadBytes(fileRef, file)
-      const fileUrl = await getDownloadURL(fileRef)
+      setTotalSize(fileSize + imgSize)
+      const docUpload = async () => {
+        const res = await createPod(
+          title?.current?.value, 
+          description?.current?.value, 
+          category, 
+          author?.current?.value, 
+          imageUrl, 
+          fileUrl
+        )
+        console.log(res)
+        if(res.status != 200) {
+          setMessage('something went wrong')
+        }
+        else {
+          setMessage('Uploaded Successfully')
+          navigate('/explore')
+        }
+      }
 
-      const res = await createPod(
-        title?.current?.value, 
-        description?.current?.value, 
-        category, 
-        author?.current?.value, 
-        imageUrl, 
-        fileUrl
-      )
-      console.log(res)
-      if(res.status != 200) {
-        setMessage('something went wrong')
+      const fileUpload = async () => {
+        const newId = uid(36)
+        const fileRef = ref(storage, `${newId}`)
+        const fileUp =  uploadBytesResumable(fileRef, file)
+        fileUp.on('state_changed', 
+          (snap) => setUploadedSize(uploadedSize + snap.bytesTransferred), 
+          (err) => console.log(err), 
+          async () => {
+            const res = await getDownloadURL(fileUp.snapshot.ref)
+            fileUrl = res
+            docUpload()
+          }
+        )
       }
-      else {
-        setMessage('Uploaded Successfully')
-        navigate('/explore')
+
+      const imgUpload = async () => {
+        if(poster == '') {
+          fileUpload()
+        }
+        else {
+          const uniqueId = uid(36)
+          const imaageRef = ref(storage, `${uniqueId}`)
+          const imageUp = uploadBytesResumable(imaageRef, poster)
+          imageUp.on('state_changed', 
+            (snap) => setUploadedSize(uploadedSize + snap.bytesTransferred), 
+            (err) => console.log(err), 
+            async () => {
+              const res = await getDownloadURL(imageUp.snapshot.ref)
+              imageUrl = res
+              fileUpload()
+            }
+          )
+        }
       }
+
+      imgUpload()
     }
     catch(err) {
       console.log(err)
       setMessage('something went wrong')
+    }
+    finally {
+      setLoading(false)
+      setUploadedSize(0)
+      setPercentage(0)
     }
   }
 
@@ -76,7 +127,8 @@ const CreatePod: FC = () => {
             </label>
             <input type='file' className='hidden' id='posterInput' accept='image/*' onChange={(e) => {
               setPoster(e.target.files[0]) 
-            }} />
+              setImgSize(e.target.files[0].size)
+            }} disabled={loading} />
           </div>
 
           <div className="author">
@@ -98,12 +150,14 @@ const CreatePod: FC = () => {
               <label className="form-control">
                 <input type="radio" name="radio" value='video' 
                   onClick={(e) => setCategory(e.target.value)}
+                  disabled={loading}
                 />
                 Video
               </label>
               <label className="form-control">
                 <input type="radio" name="radio" value='audio' defaultChecked
                   onClick={(e) => setCategory(e.target.value)}
+                  disabled={loading}
                 />
                 Audio
               </label>
@@ -111,11 +165,24 @@ const CreatePod: FC = () => {
             <div className="author" style={{marginTop:"30px"}}>
               <h4>Upload File</h4>
               <div className="emailContainer"><input type="file" size={60} placeholder="AuthorName" className="emailid" defaultValue=''
-                onChange={(e) => setFile(e.target.files[0])}
-                accept={`${category == 'audio' ? 'audio/*' : 'video/*'}`}
+                onChange={(e) => {
+                  setFile(e.target.files[0])
+                  setFileSize(e.target.files[0].size)
+                }}
+                accept={`${category == 'audio' ? 'audio/*' : 'video/*'}`} 
+                disabled={loading}
               /></div>
             </div>
 
+            <div className={`${percentage == 0 || isNaN(percentage) ? 'hidden' : 'block percentage'}`}>
+              <Line 
+                percent={percentage}
+                strokeColor='#808080'
+                strokeWidth={5}
+                trailColor='#f5f5f5'
+              />
+              <h3>{percentage}%</h3>
+            </div>
             <div className="author">
               <div className={`${message != '' ? "emailContainer message" : 'hidden'}`} >{message}</div>
             </div>

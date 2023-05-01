@@ -12,7 +12,7 @@ interface Props {
 const PodProvider: FC<Props> = ({ children }) => {
 
   const { prof } = user()
-  const [docPercentage, setDocPercentage] = useState<any>()
+  const [docPercentage, setDocPercentage] = useState<number>(0)
 
   const createPod = async (title: string, description: string, category: string, author: string, posterURL: string, fileURL: string) => {
     const userData = JSON.parse(localStorage.getItem('userCred'))
@@ -25,7 +25,7 @@ const PodProvider: FC<Props> = ({ children }) => {
       posterURL, 
       fileURL
     }, {
-      onUploadProgress: progressEvent => setDocPercentage((parseInt(Math.round((progressEvent.loaded * 100) / progressEvent.total))) * 0.25)
+      onUploadProgress: progressEvent => setDocPercentage(Number(Math.round((progressEvent.loaded * 100) / progressEvent.total)))
     })
 
     return res
@@ -39,7 +39,7 @@ const PodProvider: FC<Props> = ({ children }) => {
       author, 
       posterURL, 
     }, {
-      onUploadProgress: progressEvent => setDocPercentage((parseInt(Math.round((progressEvent.loaded * 100) / progressEvent.total))) * 0.25)
+      onUploadProgress: progressEvent => setDocPercentage(Number(Math.round((progressEvent.loaded * 100) / progressEvent.total)))
     })
 
     return res
