@@ -3,9 +3,7 @@ import { Sidenav, Cardmax, Card, Topnav, Player } from '../components'
 import { podcast } from '../contexts'
 import { category } from '../constants/category'
 
-<link href="https://fonts.googleapis.com/css?family=Bungee+Inline" rel="stylesheet"></link>
-
-const Explore: FC = () => {
+const Explore: FC<Props> = () => {
   const [collection, setCollection] = useState<any>([])
   const [activeCategory, setActiveCategory] = useState<string>(category[0].key)
   const [search, setSearch] = useState<string>('')

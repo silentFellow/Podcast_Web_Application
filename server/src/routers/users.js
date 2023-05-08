@@ -68,11 +68,23 @@ router.post('/login', async (req, res) => {
 router.post('/update', async (req, res) => {
   const { uid, newCollection } = req.body
   try {
-    const currentUser = await users.findByIdAndUpdate(uid, {
-      $push: {
-        favourites: newCollection
-      }
-    })
+    const currentUser = await users.findById(uid)
+    const favSet = new Set(currentUser.favourites)
+
+    if(favSet.has(uid)) {
+      const dataUpdate = await users.findByIdAndUpdate(uid, {
+        $pull: {
+          favourites: newCollection
+        }
+      })
+    }
+    else {
+      const dataUpdate = await users.findByIdAndUpdate(uid, {
+        $push: {
+          favourites: newCollection
+        }
+      })
+    }
 
     res.status(200).send('Uploaded Successfully')
   }
@@ -89,27 +101,6 @@ router.get('/profile', async (req, res) => {
   const data = await users.findById( uid )
   res.status(200).send(data)
 })
-
-/* // dataUpdate 
-router.post('/dataupdate', async (req, res) => {
-  const { uid, upCollection, dataId } = req.body
-  try {
-    const user = await users.findByIdAndUpdate(uid, {
-      $set: {
-        my_collection: {
-          $set: {
-            
-          }
-        }
-      }
-    })
-
-    res.status(200).send('Uploaded Successfully')
-  }
-  catch(err) {
-    console.log(err)
-  }
-}) */
 
 // exports 
 export { router as userRouter }
