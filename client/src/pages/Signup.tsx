@@ -1,38 +1,37 @@
-import { FC, useRef, useState } from 'react'
+import { FC, useState, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { FcGoogle } from 'react-icons/fc'
 import { useCookies } from 'react-cookie'
-import { Google, Apple } from '../assets/'
-import { FaFacebookF } from 'react-icons/fa'
-import { user } from '../contexts/users'
+import { user } from '../contexts'
 
 const Signup: FC = () => {
 
-  const [loading, setLoading] = useState<boolean>(false)
-
-  const firstName = useRef()
-  const lastName = useRef()
-  const password = useRef()
-  const confirmPassword = useRef()
-  const [_, setCookies] = useCookies()
-  const [message, setMessage]= useState<string>('')
-  const navigate = useNavigate()
-
   const { signup, googleLogin, login } = user()
 
-  const SignUp = async () => {
+  const uname = useRef('')
+  const password = useRef('')
+  const cPassword = useRef('')
+
+  const [loading, setLoading] = useState<boolean>(false)
+  const [message, setMessage] = useState<string>('')
+  
+  const [_, setCookies] = useCookies(['access_token'])
+  const navigate = useNavigate()
+
+  const signUp = async () => {
     setMessage('')
-    if(firstName.current.value == '' || password.current.value == '') {
+    if(uname.current.value == '' || password.current.value == '') {
       return setMessage("Enter a valid details")
     }
-    if(password.current.value != confirmPassword.current.value) {
-      return setMessage('Passwords do no match')
+    if(password.current.value != cPassword.current.value) {
+      return setMessage('Passwords do not match')
     }
 
     setLoading(true)
-    const name = firstName.current.value + lastName.current.value || ''
     try {
       setMessage('Please Wait')
-      const res = await signup(name, password.current.value)
+      const res = await signup(uname.current.value, password.current.value)
+      console.log(res)
       if(res.status != 200) {
         setMessage(res)
       }
@@ -47,7 +46,7 @@ const Signup: FC = () => {
     setLoading(false)
   }
 
-  const google = async (): Promise<string | void> => {
+  const gSignIn = async () => {
     setMessage('')
     setLoading(true)
     try {
@@ -79,41 +78,50 @@ const Signup: FC = () => {
     }
     setLoading(false)
   }
+  
+  return (
+    <div className="min-h-screen w-screen flex items-center text-[1.8rem] bg-lprimary dark:bg-dprimary text-lsecondary dark:text-dsecondary">
+      
+      <div className="h-screen w-screen flex flex-col justify-center items-center p-9 sm:h-[42rem] sm:w-[50rem] sm:ml-[12%] sm:rounded-3xl sm:justify-normal">
+        <header className="w-full">
+          <span className="font-[600] tracking-wide">Start Your Journey - </span>
+          <span className='font-black text-lascent dark:text-dascent'>Sign Up</span><br />
+        </header>
 
-  return(
-  <div className="signdiv">
-    <h3 className="start">Start your Podcast Journey</h3>
-    <h2 className="create">Create new account</h2>
+        <div className={`${message != '' && "w-full mt-3 flex items-center"}`}>
+          <span className="font-black text-lascent dark:text-dascent">{message.toUpperCase()}</span>
+        </div>
 
-    <h4 style={{color:'gray',marginTop:'10px'}}>Already a member? <Link to='/login'>login</Link></h4>
+        <form className="w-full mt-[2.4rem]">
+          <input type="text" placeholder='Enter User Name' className="w-[96%] p-4 px-7 text-[1.5rem] rounded-xl outline-none bg-lbg dark:bg-dbg" ref={uname} />
+          <input type="password" placeholder='Enter Password' className="w-[96%] p-4 px-7 text-[1.5rem] rounded-xl my-5 mt-12 outline-none bg-lbg dark:bg-dbg" ref={password} />
+          <input type="password" placeholder='Enter Confirm Password' className="w-[96%] p-4 px-7 text-[1.5rem] rounded-xl my-5 mt-6 outline-none bg-lbg dark:bg-dbg" ref={cPassword} />
 
-    <div className="signupinput">
-    <div className={message == '' ? 'hidden' : "emailpass my p"}>
-      <div className="emailContainer center">{message}</div>
+          <span className='font-black text-[1.5rem]'>Already Have An Account ? </span>
+          <Link to={'/login'} className='font-black text-[1.5rem] text-lascent dark:text-dascent'>Login!</Link><br />
+
+          <div className="w-full flex justify-center">
+            <button
+              type='button'
+              className='bg-lascent dark:bg-dascent font-black font-space px-6 py-2 rounded-lg mt-5 hover:opacity-90' 
+              disabled={loading} 
+              onClick={() => signUp()}
+            >Sign Up</button>
+          </div>
+        </form>
+
+        <footer className="w-full mt-[2.7rem] flex justify-center">
+          <button className="bg-lbg dark:bg-dbg w-[66%] p-4 rounded-xl flex justify-center items-center cursor-pointer border-[0.01rem] border-lascent dark:border-dascent hover:opacity-80" 
+            disabled={loading} 
+            onClick={() => gSignIn()}
+          >
+            <FcGoogle />
+            <span className='font-black text-[1.4rem] mx-6'>Sign In With Google</span>
+          </button>
+        </footer>
+      </div>
+
     </div>
-
-    {/* input */}
-    <div className="name">
-      <div className="nameContainer"><input placeholder='First Name' type="text" className="first" ref={firstName} defaultValue='' /></div>
-      <div className="nameContainer"><input type="text" placeholder="Last Name" className="last" ref={lastName} defaultValue='' /></div>
-    </div>
-    <div className="emailpass">
-      <div className="emailContainer"><input type="password" placeholder="password" className="emailid" ref={password} defaultValue='' /></div>
-      <div className="emailContainer"><input type="password" placeholder="confirm password" className="emailid" ref={confirmPassword} defaultValue='' /></div>
-    </div>
-    </div>
-    <div>
-     <button className="createacc" disabled={loading} onClick={() => SignUp()}>Create account</button>
-
-     <h3 style={{marginLeft:'135px',marginTop:'20px'}}>Other Credentials</h3>
-     </div>
-
-     <div className="othercred">
-    <div className="circle"><img src={Google} height={'30px'} width={'30px'} alt="" onClick={() => google()} /></div>
-    <div className="circle"><img src={Apple} height={'28px'} width={'28px'} alt="" /></div>
-    <div className="circle"><FaFacebookF height={'30px'} width={'30px'} color={'red'} /></div>
-     </div>
-  </div>
   )
 }
 

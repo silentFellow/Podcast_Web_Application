@@ -1,24 +1,24 @@
-import { useState, useRef } from 'react'
+import { FC, useState, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { FcGoogle } from 'react-icons/fc'
 import { useCookies } from 'react-cookie'
-import { Google, Apple } from '../assets'
-import { FaFacebookF } from 'react-icons/fa'
-import { user } from '../contexts/users'
+import { user } from '../contexts'
 
-const Login = () => {
-
-  const [loading, setLoading] = useState<boolean>(false)
+const Login: FC = () => {
 
   const { login, googleLogin, signup } = user()
+
   const uname = useRef('')
   const password = useRef('')
+
+  const [loading, setLoading] = useState<boolean>(false)
   const [message, setMessage] = useState<string>('')
+  
   const [_, setCookies] = useCookies(['access_token'])
   const navigate = useNavigate()
 
-  const signin = async (): Promise<string | void> => {
+  const signIn = async () => {
     setMessage('')
-    
     if(uname.current.value == '' || password.current.value == '') {
       return setMessage('Enter details')
     }
@@ -43,7 +43,7 @@ const Login = () => {
     setLoading(false)
   }
 
-  const google = async (): Promise<string | void> => {
+  const gSignIn = async () => {
     setMessage('')
     setLoading(true)
     try {
@@ -75,36 +75,48 @@ const Login = () => {
     }
     setLoading(false)
   }
-
+  
   return (
-         <div className="signdiv">
-      <h3 className="start">Resume your Podcast Journey</h3>
-      <h2 className="create">Sign in to your account</h2>
+    <div className="min-h-screen w-screen flex items-center text-[1.8rem] bg-lprimary dark:bg-dprimary text-lsecondary dark:text-dsecondary">
+      
+      <div className="h-screen w-screen flex flex-col justify-center items-center p-9 sm:h-[42rem] sm:w-[50rem] sm:ml-[12%] sm:rounded-3xl sm:justify-normal">
+        <header className="w-full">
+          <span className="font-[600] tracking-wide">Resume Your Journey - </span>
+          <span className='font-black text-lascent dark:text-dascent'>Sign In</span>
+        </header>
 
-      <h4 style={{color:'gray',marginTop:'10px'}}>Not a member? <Link to='/Signup'>Create account</Link></h4>
-
-      <div className="signupinput">
-
-      <div className={message == '' ? 'hidden' : "emailpass my p"}>
-        <div className="emailContainer center">{message}</div>
-      </div>
-
-        <div className="emailpass">
-          <div className="emailContainer"><input type="text" placeholder="Full Name" className="emailid" ref={uname} defaultValue='' /></div>
-          <div className="emailContainer"><input type="password" placeholder="password" className="emailid" ref={password} defaultValue='' /></div>
+        <div className={`${message != '' && "w-full mt-3 flex items-center"}`}>
+          <span className="font-black text-lascent dark:text-dascent">{message.toUpperCase()}</span>
         </div>
+
+        <form className="w-full mt-[2.4rem]">
+          <input type="text" placeholder='Enter User Name' className="w-[96%] p-4 px-7 text-[1.5rem] rounded-xl outline-none bg-lbg dark:bg-dbg" ref={uname} />
+          <input type="password" placeholder='Enter Password' className="w-[96%] p-4 px-7 text-[1.5rem] rounded-xl my-5 mt-12 outline-none bg-lbg dark:bg-dbg" ref={password} />
+
+          <span className='font-black text-[1.5rem]'>Don't Have An Account ? </span>
+          <Link to={'/signup'} className='font-black text-[1.5rem] text-lascent dark:text-dascent'>Sign Up!</Link><br />
+
+          <div className="w-full flex justify-center">
+            <button
+              type='button'
+              className='bg-lascent dark:bg-dascent font-black font-space px-6 py-2 rounded-lg mt-5 hover:opacity-90' 
+              disabled={loading} 
+              onClick={() => signIn()}
+            >Login</button>
+          </div>
+        </form>
+
+        <footer className="w-full mt-[2.7rem] flex justify-center">
+          <button className="bg-lbg dark:bg-dbg w-[66%] p-4 rounded-xl flex justify-center items-center cursor-pointer border-[0.01rem] border-lascent dark:border-dascent hover:opacity-80" 
+            disabled={loading} 
+            onClick={() => gSignIn()}
+          >
+            <FcGoogle />
+            <span className='font-black text-[1.4rem] mx-6'>Sign In With Google</span>
+          </button>
+        </footer>
       </div>
-      <div>
-       <button className="createacc" disabled={loading} onClick={() => signin()}>Sign in</button>
 
-       <h3 style={{marginLeft:'135px',marginTop:'20px'}}>Other Credentials</h3>
-       </div>
-
-       <div className="othercred">
-      <div className="circle"><img src={Google} height={'30px'} width={'30px'} alt="" onClick={() => google()} /></div>
-      <div className="circle"><img src={Apple} height={'28px'} width={'28px'} alt="" /></div>
-      <div className="circle"><FaFacebookF height={'30px'} width={'30px'} color={'red'} /></div>
-       </div>
     </div>
   )
 }

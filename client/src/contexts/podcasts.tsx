@@ -1,5 +1,5 @@
 import { FC, createContext, useContext, useState } from 'react'
-import PodcastApi from '../api/register'
+import PodcastApi from '../api/app'
 import { user } from '../contexts/users'
 
 export const podContext = createContext(null)
@@ -14,8 +14,8 @@ const PodProvider: FC<Props> = ({ children }) => {
   const { prof } = user()
   const [docPercentage, setDocPercentage] = useState<number>(0)
 
-  const createPod = async (title: string, description: string, category: string, author: string, posterURL: string, fileURL: string) => {
-    const userData = JSON.parse(localStorage.getItem('userCred'))
+  const createPod = async (title: string, description: string, category: string, author: string, posterURL: string, fileURL: string): Promise<{}> => {
+    const userData = JSON.parse(localStorage.getItem('userCred') || '{}')
     const res = await PodcastApi.post('/podcast/post', {
       title, 
       description, 
@@ -25,7 +25,7 @@ const PodProvider: FC<Props> = ({ children }) => {
       posterURL, 
       fileURL
     }, {
-      onUploadProgress: progressEvent => setDocPercentage(Number(Math.round((progressEvent.loaded * 100) / progressEvent.total)))
+      onUploadProgress: progressEvent => setDocPercentage(Number(Math.round(((progressEvent.loaded || 0) * 100) / (progressEvent.total || 0))))
     })
 
     return res
@@ -39,7 +39,7 @@ const PodProvider: FC<Props> = ({ children }) => {
       author, 
       posterURL, 
     }, {
-      onUploadProgress: progressEvent => setDocPercentage(Number(Math.round((progressEvent.loaded * 100) / progressEvent.total)))
+      onUploadProgress: progressEvent => setDocPercentage(Number(Math.round(((progressEvent.loaded || 0) * 100) / (progressEvent.total || 0))))
     })
 
     return res
@@ -68,7 +68,7 @@ const PodProvider: FC<Props> = ({ children }) => {
   }
 
   const myCollection = async () => {
-    const userData = JSON.parse(localStorage.getItem('userCred'))
+    const userData = JSON.parse(localStorage.getItem('userCred') || '{}')
     const res = await PodcastApi.get('/podcast/get', {
       params: {
         key: 'authorId', 

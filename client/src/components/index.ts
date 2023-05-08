@@ -1,13 +1,13 @@
-import Sidenav from "./Sidenav";
+import SideBar from "./SideBar";
 import Card from "./Card";
-import Cardmax from "./Cardmax";
-import Topnav from "./Topnav";
-import Player from "./player";
+import CollectionCard from "./CollectionCard";
+import ShowCollection from "./ShowCollection";
+import Player from "./Player";
 
 export {
-  Sidenav, 
+  SideBar, 
   Card, 
-  Cardmax, 
-  Topnav, 
-  Player
+  CollectionCard, 
+  ShowCollection, 
+  Player, 
 }

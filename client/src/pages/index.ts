@@ -3,8 +3,7 @@ import Login from "./Login";
 import Home from "./Home";
 import Explore from './Explore'
 import { PrivateRouteExplore, PrivateRouteLogin } from "./PrivateRoutes"
-import CreatePod from "./CreatePod";
-import UpdatePod from './UpdatePod'
+import CreatePodcast from "./CreatePodcast";
 
 export {
   Signup, 
@@ -13,6 +12,5 @@ export {
   Explore, 
   PrivateRouteExplore, 
   PrivateRouteLogin, 
-  CreatePod, 
-  UpdatePod
+  CreatePodcast
 }

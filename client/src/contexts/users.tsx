@@ -1,6 +1,6 @@
 import { FC, useState, createContext, useContext, useEffect } from 'react'
 import { useCookies } from 'react-cookie'
-import userApi from '../api/register'
+import userApi from '../api/app'
 import { auth, googleAuth } from '../firebase'
 import { signInWithPopup, signOut } from 'firebase/auth'
 
@@ -11,7 +11,7 @@ interface Props {
   children: any
 }
 
-const UsersProvider: FC<Props> = ({ children }) => {
+const UsersProvider: FC<Props> = ({ children })  => {
 
   const [users, setUsers] = useState<any>([{}])
   const [_, setCookies] = useCookies(['access_token'])
@@ -59,16 +59,17 @@ const UsersProvider: FC<Props> = ({ children }) => {
     }
   }
 
-  const signout = async (): Promise<void> => {
+  const signout = async (theme: string): Promise<void> => {
     if(users?.emailVerified == true) {
       await signOut(auth)
     }
     setCookies('access_token', '')
     localStorage.clear()
+    localStorage.setItem('theme', theme)
   }
 
   const prof = async () => {
-    const id = JSON.parse(localStorage.getItem('userCred')).uid
+    const id = JSON.parse(localStorage.getItem('userCred') || '{}')?.uid
 
     try {
       const res = await userApi.get('/register/profile', {
@@ -85,7 +86,7 @@ const UsersProvider: FC<Props> = ({ children }) => {
   }
 
   const updateProf = async (clcn: string) => {
-    const user = JSON.parse(localStorage.getItem('userCred'))
+    const user = JSON.parse(localStorage.getItem('userCred') || '{}')
     const res = await userApi.post('/register/update', {
       uid: user.uid, 
       newCollection: clcn

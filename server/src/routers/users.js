@@ -71,7 +71,7 @@ router.post('/update', async (req, res) => {
     const currentUser = await users.findById(uid)
     const favSet = new Set(currentUser.favourites)
 
-    if(favSet.has(uid)) {
+    if(favSet.has(newCollection)) {
       const dataUpdate = await users.findByIdAndUpdate(uid, {
         $pull: {
           favourites: newCollection

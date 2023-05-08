@@ -3,7 +3,7 @@ import { podcast } from './podcasts'
 import UsersProvider from './users'
 import PodProvider from './podcasts'
 
-export {
+export  {
   user, 
   podcast, 
   UsersProvider, 
