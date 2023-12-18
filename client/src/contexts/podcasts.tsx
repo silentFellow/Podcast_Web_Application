@@ -79,6 +79,17 @@ const PodProvider: FC<Props> = ({ children }) => {
     return res
   }
 
+  const selected = async (id: string[]) => {
+    const res = await PodcastApi.get('/podcast/get', {
+      params: {
+        key: 'id', 
+        value: id
+      }
+    })
+
+    return res
+  }
+
   const favourites = async () => {
     const user = await prof()
     const favourite = user.data.favourites
@@ -112,6 +123,7 @@ const PodProvider: FC<Props> = ({ children }) => {
     myCollection, 
     favourites, 
     deletePod, 
+    selected, 
     docPercentage
   }
 

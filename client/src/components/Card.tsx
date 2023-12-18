@@ -26,7 +26,6 @@ const Card: FC<Props>= ({ author, title, category, poster, file, id }) => {
     const data = async () => {
       const profData = await prof()
       setFavSet(new Set(profData.data.favourites))
-      console.log(favSet)
     }
 
     data()

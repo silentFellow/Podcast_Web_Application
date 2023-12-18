@@ -3,6 +3,7 @@ import { FaSearchengin } from 'react-icons/fa'
 import { CiMenuKebab } from 'react-icons/ci'
 import { user, podcast } from '../contexts'
 import { Card, CollectionCard } from '.'
+import { io } from 'socket.io-client'
 
 interface Props {
   theme: string, 
@@ -18,10 +19,30 @@ interface Props {
 
 const ShowCollection: FC<Props> = ({ theme, setTheme, showSideBar, setShowSideBar, search, setSearch, active, showMenu, setShowMenu }) => {
 
-  const { signout } = user()
+  const { signout, prof } = user()
+  const { selected } = podcast()
 
-  const [collection, setCollection] = useState<[]>([])
+  const [collection, setCollection] = useState<any>([])
+  const [tempCollection, setTempCollection] = useState<any>(structuredClone(collection))
   const { fullCollection, formatedCollection, myCollection, favourites }: any = podcast()
+
+  const socket = io('http://localhost:9999/')
+  
+  socket.on('user', async (messages) => {
+    const cid: string = JSON.parse(localStorage.getItem('userCred' || ''))?.uid
+    setTempCollection(structuredClone(collection))
+    if(cid == messages.id) {
+      const cUser = await prof(cid)
+      const fav = new Set(cUser.data.favourites)
+
+      setTempCollection(tempCollection => tempCollection.filter(clcn => !fav.has(clcn._id)))
+      const res = await selected(cUser.data.favourites)
+      res.map(res => setTempCollection([...res.data, ...tempCollection]))
+      const favs = [...new Set(res)]
+      setCollection([...favs, ...tempCollection])
+      console.log(collection)
+    }
+  })
 
   useEffect(() => {
     localStorage.removeItem('favAdd')
